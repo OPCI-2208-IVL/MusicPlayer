@@ -1,0 +1,19 @@
+package com.example.myapplication.ui.myapp
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import com.example.myapplication.feature.main.mainScreen
+import com.example.myapplication.feature.main.navigateToMain
+import com.example.myapplication.feature.splash.SPlASH_ROUTE
+import com.example.myapplication.feature.splash.splashScreen
+
+@Composable
+fun Myapp(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = SPlASH_ROUTE) {
+        splashScreen(
+            toMain = navController::navigateToMain
+        )
+        mainScreen()
+    }
+}
