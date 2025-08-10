@@ -1,6 +1,6 @@
 package com.example.myapplication.model.response
 
-data class NetworkResponse<T>(
+data class NetworkPageData<T>(
     val data: T? = null,
     val status: Int = 0, //O:success;else:error
     val message: String? = null, //error message
