@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,22 +23,35 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.component.ItemSong
-import com.example.myapplication.model.DiscoverPreviewSongData.songs
+import com.example.myapplication.model.Song
 
 
 @Composable
-fun DiscoveryRoute(toSearch: () -> Unit) {
-    DiscoveryScreen(toSearch)
+fun DiscoveryRoute(
+    toSearch: () -> Unit,
+    viewModel: DiscoverViewModel = viewModel()
+){
+    val datum by viewModel.datum.collectAsState()
+    DiscoveryScreen(
+        toSearch,
+        datum
+    )
 }
 
 
 @Composable
-fun DiscoveryScreen(toSearch: () -> Unit) {
+fun DiscoveryScreen(
+    toSearch: () -> Unit,
+    songs:List<Song>
+) {
     Scaffold (
         topBar = {
             DiscoveryTopBar(toSearch)
@@ -58,7 +70,7 @@ fun DiscoveryScreen(toSearch: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(songs ){
+                items(songs){
                     ItemSong(data = it)
                 }
             }

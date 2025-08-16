@@ -1,7 +1,8 @@
 package com.example.myapplication.model
 
-import androidx.privacysandbox.tools.core.model.Constant
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Song(
     val id: String,
     val title: String,

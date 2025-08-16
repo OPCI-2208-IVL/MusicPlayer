@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization") version "1.9.23"
 }
 
 android {
@@ -50,7 +51,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.text.google.fonts)
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.tools.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -59,4 +60,23 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //kotlin序列化
+    //https://kotlinlang.org/docs/serialization.html
+    implementation(libs.kotlinx.serialization.json)
+
+    //region 网络框架
+    //https://github.com/square/okhttp
+    implementation(libs.okhttp)
+
+    //网络框架日志框架
+    implementation(libs.okhttp3.logging.interceptor)
+
+    //类型安全网络框架
+    //https://github.com/square/retrofit
+    implementation(libs.retrofit2.retrofit)
+
+    //让Retrofit支持Kotlinx Serialization
+    implementation(libs.jakewharton.retrofit2.kotlinx.serialization.converter)
+    //endregion
 }

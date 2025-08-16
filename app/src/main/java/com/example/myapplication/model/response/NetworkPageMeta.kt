@@ -1,6 +1,9 @@
 package com.example.myapplication.model.response
 
-data class NetworkPageMata (
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class NetworkPageMeta (
     val total: Int? = null,//total messages
     val pages: Int? = null,//total pages
     val size: Int? = null,//number of messages on one page
