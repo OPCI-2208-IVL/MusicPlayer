@@ -18,6 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.extension.clickableNoRipple
 import com.example.myapplication.feature.main.TopLeveDestination
+import com.example.myapplication.ui.theme.SpaceExtraSmall2
+import com.example.myapplication.ui.theme.SpaceSmall
 
 
 @Composable
@@ -39,7 +41,7 @@ fun NavigationBar(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.weight(1f)
-                    .padding(vertical = 2.dp)
+                    .padding(vertical = SpaceExtraSmall2)
                     .clickableNoRipple {
                         onNavigateToDestination(index)
                     }
@@ -53,7 +55,7 @@ fun NavigationBar(
                     modifier = Modifier.size(25.dp)
                 )
 
-                Spacer(modifier = Modifier.size(5.dp))
+                Spacer(modifier = Modifier.size(SpaceSmall))
 
                 Text(text = stringResource(id = destination.titleTextID),
                     color =

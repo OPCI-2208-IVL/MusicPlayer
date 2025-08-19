@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.0"
+coilCompose = "2.6.0"
 kotlin = "2.0.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -19,6 +20,7 @@ toolsCore = "1.0.0-alpha13"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 jakewharton-retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverterVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

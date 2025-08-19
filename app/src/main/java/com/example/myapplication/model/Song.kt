@@ -7,7 +7,7 @@ data class Song(
     val id: String,
     val title: String,
     val uri: String,
-    val icon: String = "",
+    val icon: String? = "",
     val album: String,
     val artist: String,
     val genre: String,

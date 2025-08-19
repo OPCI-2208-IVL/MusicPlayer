@@ -79,4 +79,8 @@ dependencies {
     //让Retrofit支持Kotlinx Serialization
     implementation(libs.jakewharton.retrofit2.kotlinx.serialization.converter)
     //endregion
+
+    //图片加载框架
+    //https://github.com/coil-kt/coil
+    implementation(libs.coil.compose)
 }

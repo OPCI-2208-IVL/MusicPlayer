@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
+import com.example.myapplication.ui.theme.SpaceTop
 
 @Composable
 fun SplashRoute(
@@ -74,7 +75,7 @@ fun SplashScreen(
             painter = painterResource(id = R.drawable.splash_logo),
             contentDescription = null,
             modifier = Modifier
-                .padding(top = 130.dp)
+                .padding(top = SpaceTop)
                 .align(Alignment.TopCenter)
         )
     }

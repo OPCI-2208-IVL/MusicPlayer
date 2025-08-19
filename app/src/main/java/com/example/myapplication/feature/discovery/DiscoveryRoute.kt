@@ -32,6 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.component.ItemSong
 import com.example.myapplication.model.Song
+import com.example.myapplication.ui.theme.Space4XLarge
+import com.example.myapplication.ui.theme.SpaceOuter
+import com.example.myapplication.ui.theme.SpaceSmall
+import com.example.myapplication.ui.theme.SpaceTip
 
 
 @Composable
@@ -66,8 +70,8 @@ fun DiscoveryScreen(
                 .padding(paddingValues)
         ){
             LazyColumn(
-                contentPadding = PaddingValues(horizontal = 18.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp),
+                contentPadding = PaddingValues(horizontal = SpaceOuter),
+                verticalArrangement = Arrangement.spacedBy(SpaceSmall),
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(songs){
@@ -92,8 +96,8 @@ private fun DiscoveryTopBar(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(38.dp)
-                    .clip(RoundedCornerShape(50.dp))
+                    .height(Space4XLarge)
+                    .clip(RoundedCornerShape(SpaceTip))
                     .background(MaterialTheme.colorScheme.onBackground)
                     .clickable {
                         toSearch()

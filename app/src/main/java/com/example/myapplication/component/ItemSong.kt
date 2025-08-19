@@ -17,31 +17,33 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.myapplication.R
 import com.example.myapplication.model.Song
+import com.example.myapplication.ui.theme.SpaceMedium
+import com.example.myapplication.ui.theme.SpaceSmall
+import com.example.myapplication.ui.theme.SpaceTip
+import com.example.myapplication.util.abs2rel
 
 @Composable
 fun ItemSong(
     data: Song,
     modifier: Modifier = Modifier
 ){
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Image(
-            painter = painterResource( R.drawable.placeholder),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(55.dp)
-                .clip(MaterialTheme.shapes.small)
+        YaASyncImage(
+            model = data.icon,
+            modifier = Modifier.size(SpaceTip)
         )
 
         Column (
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 10.dp)
+                .padding(horizontal = SpaceMedium)
         ){
             Text(
                 text = data.title,
@@ -49,7 +51,7 @@ fun ItemSong(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(
-                modifier = Modifier.height(5.dp)
+                modifier = Modifier.height(SpaceSmall)
             )
             Text(
                 text = "${data.artist} - ${data.album}"
