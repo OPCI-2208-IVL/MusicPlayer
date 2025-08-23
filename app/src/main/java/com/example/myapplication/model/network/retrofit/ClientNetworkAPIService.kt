@@ -1,6 +1,7 @@
 package com.example.myapplication.model.network.retrofit
 
 import com.example.myapplication.model.Song
+import com.example.myapplication.model.ViewData
 import com.example.myapplication.model.response.NetworkPageData
 import com.example.myapplication.model.response.NetworkResponse
 import retrofit2.http.GET
@@ -14,4 +15,9 @@ interface ClientNetworkAPIService {
     suspend fun songDetail(
         @Query(value = "id")id: String,
     ) :NetworkResponse<Song>
+
+    @GET("v1/indexes")
+    suspend fun  index(
+        @Query(value = "app")app: Int
+    ):NetworkResponse<NetworkPageData<ViewData>>
 }

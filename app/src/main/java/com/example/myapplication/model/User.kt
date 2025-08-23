@@ -1,5 +1,8 @@
 package com.example.myapplication.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
     val id: String = "",
     /**
@@ -21,11 +24,6 @@ data class User(
     /**
      * 性别
      * 0：保密，10：男，20：女
-     * 可以定义为枚举
-     * 但枚举性能没有int好
-     * 但int没有一些编译验证
-     * Android中有替代方式
-     * 这里用不到就不讲解了
      */
     val gender: String = "0",
 
@@ -140,7 +138,7 @@ data class User(
 
     //region 第三方登录
     val token: String = "",
-    val refeshToken: String = "",
+    val refreshToken: String = "",
     val openid: String = "",
     val expiresIn: Long = 0,
 

@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.example.myapplication.feature.main.mainScreen
 import com.example.myapplication.feature.main.navigateToMain
+import com.example.myapplication.feature.sheetdetail.navigateToSheetDetail
+import com.example.myapplication.feature.sheetdetail.sheetDetail
 import com.example.myapplication.feature.splash.SPlASH_ROUTE
 import com.example.myapplication.feature.splash.splashScreen
 
@@ -14,6 +16,7 @@ fun Myapp(navController: NavHostController) {
         splashScreen(
             toMain = navController::navigateToMain
         )
-        mainScreen()
+        mainScreen(toSheetDetail = navController::navigateToSheetDetail)
+        sheetDetail()
     }
 }

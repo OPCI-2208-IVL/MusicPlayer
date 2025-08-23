@@ -20,12 +20,18 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainRoute() {
-    MainScreen()
+fun MainRoute(
+    toSheetDetail: (String) -> Unit
+) {
+    MainScreen(
+        toSheetDetail
+    )
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    toSheetDetail: (String) -> Unit
+) {
     val pageState = rememberPagerState {
         3
     }
@@ -47,7 +53,7 @@ fun MainScreen() {
                 .weight(1f)
         ) { page ->
             when (page) {
-                0 -> DiscoveryRoute({})
+                0 -> DiscoveryRoute(toSearch = {}, toSheetDetail = toSheetDetail)
                 1 -> MyRoute()
                 2 -> SettingsRoute()
             }

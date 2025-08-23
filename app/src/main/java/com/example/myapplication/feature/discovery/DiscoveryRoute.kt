@@ -28,10 +28,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.component.ItemSong
-import com.example.myapplication.model.Song
+import com.example.myapplication.feature.sheet.ItemSheet
+import com.example.myapplication.model.ViewData
 import com.example.myapplication.ui.theme.Space4XLarge
 import com.example.myapplication.ui.theme.SpaceOuter
 import com.example.myapplication.ui.theme.SpaceSmall
@@ -41,11 +41,13 @@ import com.example.myapplication.ui.theme.SpaceTip
 @Composable
 fun DiscoveryRoute(
     toSearch: () -> Unit,
+    toSheetDetail: (String) -> Unit,
     viewModel: DiscoverViewModel = viewModel()
 ){
     val datum by viewModel.datum.collectAsState()
     DiscoveryScreen(
         toSearch,
+        toSheetDetail,
         datum
     )
 }
@@ -54,7 +56,8 @@ fun DiscoveryRoute(
 @Composable
 fun DiscoveryScreen(
     toSearch: () -> Unit,
-    songs:List<Song>
+    toSheetDetail: (String) -> Unit,
+    topDatum:List<ViewData>
 ) {
     Scaffold (
         topBar = {
@@ -74,8 +77,22 @@ fun DiscoveryScreen(
                 verticalArrangement = Arrangement.spacedBy(SpaceSmall),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(songs){
-                    ItemSong(data = it)
+                topDatum.forEach { data ->
+                    if (data.sheets!=null) {
+                        items(data.sheets) {
+                            ItemSheet(
+                                data = it,
+                                modifier = Modifier.clickable {
+                                    toSheetDetail(it.id)
+                                }
+                            )
+                        }
+                    }
+                    else if (data.songs!=null) {
+                        items(data.songs) {
+                            ItemSong(data = it)
+                        }
+                    }
                 }
             }
         }

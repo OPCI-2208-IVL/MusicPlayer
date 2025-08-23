@@ -16,8 +16,10 @@ fun NavController.navigateToMain() {
     }
 }
 
-fun NavGraphBuilder.mainScreen() {
+fun NavGraphBuilder.mainScreen(
+    toSheetDetail: (String) -> Unit
+) {
     composable(MAIN_ROUTE) {
-        MainRoute()
+        MainRoute(toSheetDetail = toSheetDetail)
     }
 }

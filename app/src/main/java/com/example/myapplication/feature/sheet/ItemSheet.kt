@@ -31,22 +31,22 @@ fun ItemSheet(
 ){
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.onSurface)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = SpaceOuter, vertical = SpaceMedium)
     ) {
         YaASyncImage(
             model = data.icon,
-            modifier = Modifier
+            modifier = modifier
                 .size(55.dp)
                 .clip(RoundedCornerShape(5.dp))
         )
 
-        Spacer(modifier = Modifier.width(SpaceOuter))
+        Spacer(modifier = modifier.width(SpaceOuter))
 
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .weight(1f)
         ) {
             Text(
@@ -54,13 +54,13 @@ fun ItemSheet(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.outline,
             )
 
-            Spacer(modifier = Modifier.height(SpaceSmall))
+            Spacer(modifier = modifier.height(SpaceSmall))
 
             Text(
-                text = "%1$data.songsCount首",
+                text = "${data.songsCount}首",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.outline,
             )

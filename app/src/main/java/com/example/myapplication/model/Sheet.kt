@@ -1,5 +1,8 @@
 package com.example.myapplication.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Sheet(
     val id: String = "",
     val title: String = "",
