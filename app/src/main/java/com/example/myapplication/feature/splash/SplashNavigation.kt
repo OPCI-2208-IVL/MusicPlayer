@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 const val SPlASH_ROUTE = "splash"
 
 fun NavGraphBuilder.splashScreen(
-    toMain: () -> Unit
+    toMain: () -> Unit,
 ) {
     composable(SPlASH_ROUTE) {
         SplashRoute(

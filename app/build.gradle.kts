@@ -61,6 +61,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.androidx.compose.material.iconsExtended)
+
     //kotlin序列化
     //https://kotlinlang.org/docs/serialization.html
     implementation(libs.kotlinx.serialization.json)

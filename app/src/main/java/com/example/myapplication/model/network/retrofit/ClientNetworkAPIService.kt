@@ -1,5 +1,6 @@
 package com.example.myapplication.model.network.retrofit
 
+import com.example.myapplication.model.Sheet
 import com.example.myapplication.model.Song
 import com.example.myapplication.model.ViewData
 import com.example.myapplication.model.response.NetworkPageData
@@ -20,4 +21,9 @@ interface ClientNetworkAPIService {
     suspend fun  index(
         @Query(value = "app")app: Int
     ):NetworkResponse<NetworkPageData<ViewData>>
+
+    @GET("v1/sheets/info")
+    suspend fun sheetDetail(
+        @Query(value = "id")id: String
+    ):NetworkResponse<Sheet>
 }

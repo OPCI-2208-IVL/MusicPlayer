@@ -12,10 +12,11 @@ fun NavController.navigateToSheetDetail(sheetID: String) {
 }
 
 fun NavGraphBuilder.sheetDetail(
+    finishPage: () -> Unit
 ) {
     composable("${SHEET_DETAIL_ROUTE}/{${SHEET_ID}}") {
         SheetDetailRoute(
-
+            finishPage = finishPage
         )
     }
 }

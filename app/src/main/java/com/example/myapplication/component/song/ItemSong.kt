@@ -1,6 +1,5 @@
-package com.example.myapplication.component
+package com.example.myapplication.component.song
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,17 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.example.myapplication.R
+import com.example.myapplication.component.YaASyncImage
 import com.example.myapplication.model.Song
 import com.example.myapplication.ui.theme.SpaceMedium
 import com.example.myapplication.ui.theme.SpaceSmall
 import com.example.myapplication.ui.theme.SpaceTip
-import com.example.myapplication.util.abs2rel
 
 @Composable
 fun ItemSong(
@@ -33,15 +26,15 @@ fun ItemSong(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         YaASyncImage(
             model = data.icon,
-            modifier = Modifier.size(SpaceTip)
+            modifier = modifier.size(SpaceTip)
         )
 
         Column (
-            modifier = Modifier
+            modifier = modifier
                 .weight(1f)
                 .padding(horizontal = SpaceMedium)
         ){
@@ -51,7 +44,7 @@ fun ItemSong(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(
-                modifier = Modifier.height(SpaceSmall)
+                modifier = modifier.height(SpaceSmall)
             )
             Text(
                 text = "${data.artist} - ${data.album}"

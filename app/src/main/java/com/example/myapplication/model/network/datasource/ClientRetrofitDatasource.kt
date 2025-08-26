@@ -1,6 +1,7 @@
 package com.example.myapplication.model.network.datasource
 
 import com.example.myapplication.config.Config.ENDPOINT
+import com.example.myapplication.model.Sheet
 import com.example.myapplication.model.Song
 import com.example.myapplication.model.ViewData
 import com.example.myapplication.model.network.di.NetworkModule
@@ -26,7 +27,7 @@ object ClientRetrofitDatasource {
     }
 
     suspend fun songDetail(
-        @Query(value = "id") id: String,
+        @Query(value = "id")id: String,
     ): NetworkResponse<Song> {
         return service.songDetail(id)
     }
@@ -35,5 +36,11 @@ object ClientRetrofitDatasource {
         @Query(value = "app")app: Int
     ):NetworkResponse<NetworkPageData<ViewData>> {
         return service.index(app)
+    }
+
+    suspend fun sheetDetail(
+        @Query(value = "id")id: String
+    ):NetworkResponse<Sheet> {
+        return service.sheetDetail(id)
     }
 }

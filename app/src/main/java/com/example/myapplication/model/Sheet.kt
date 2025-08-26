@@ -21,3 +21,13 @@ data class Sheet(
     val isCollected: Boolean
         get() = collectId.isNotBlank()
 }
+
+fun sheet_empty(): Sheet {
+    return Sheet(
+        id = "",
+        created = "",
+        updated = "",
+
+        title = "",
+    )
+}

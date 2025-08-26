@@ -16,7 +16,11 @@ fun Myapp(navController: NavHostController) {
         splashScreen(
             toMain = navController::navigateToMain
         )
-        mainScreen(toSheetDetail = navController::navigateToSheetDetail)
-        sheetDetail()
+        mainScreen(
+            toSheetDetail = navController::navigateToSheetDetail
+        )
+        sheetDetail(
+            finishPage = navController::popBackStack
+        )
     }
 }
