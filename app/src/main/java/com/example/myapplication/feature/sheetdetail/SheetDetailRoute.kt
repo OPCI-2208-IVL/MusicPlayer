@@ -12,7 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.component.MyCenterTopAppBar
+import com.example.myapplication.component.MyLoading
 import com.example.myapplication.component.song.ItemSongSheet
+import com.example.myapplication.component.song.MyErrorView
 import com.example.myapplication.model.Sheet
 
 @Composable
@@ -24,15 +26,44 @@ fun SheetDetailRoute(
     SheetDetailScreen(
         finishPage = finishPage,
         data = data,
+        onRetry = viewModel::onRetryClick
     )
+}
+
+
+@Composable
+fun SheetDetailScreen(
+    data: SheetDetailUiState = SheetDetailUiState.Loading,
+    finishPage: () -> Unit,
+    onRetry: () -> Unit,
+) {
+    when(data){
+        is SheetDetailUiState.Loading -> {
+            MyLoading()
+        }
+
+        is SheetDetailUiState.Success -> {
+            ContentView(
+                finishPage=finishPage,
+                data = data.sheet
+            )
+        }
+
+        is SheetDetailUiState.Error -> {
+            MyErrorView(
+                message = data.message,
+                onRetryClick = onRetry
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SheetDetailScreen(
+fun ContentView(
+    finishPage: () -> Unit,
     data: Sheet,
-    finishPage: () -> Unit
-) {
+){
     Scaffold(
         topBar = {
             MyCenterTopAppBar(
