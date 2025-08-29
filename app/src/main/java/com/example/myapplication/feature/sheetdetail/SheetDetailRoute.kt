@@ -12,9 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.component.MyCenterTopAppBar
+import com.example.myapplication.component.MyErrorView
 import com.example.myapplication.component.MyLoading
 import com.example.myapplication.component.song.ItemSongSheet
-import com.example.myapplication.component.song.MyErrorView
 import com.example.myapplication.model.Sheet
 
 @Composable
@@ -37,14 +37,14 @@ fun SheetDetailScreen(
     finishPage: () -> Unit,
     onRetry: () -> Unit,
 ) {
-    when(data){
+    when (data) {
         is SheetDetailUiState.Loading -> {
             MyLoading()
         }
 
         is SheetDetailUiState.Success -> {
             ContentView(
-                finishPage=finishPage,
+                finishPage = finishPage,
                 data = data.sheet
             )
         }
@@ -63,7 +63,7 @@ fun SheetDetailScreen(
 fun ContentView(
     finishPage: () -> Unit,
     data: Sheet,
-){
+) {
     Scaffold(
         topBar = {
             MyCenterTopAppBar(
@@ -77,9 +77,9 @@ fun ContentView(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValue)
-        ){
+        ) {
             data.songs?.let {
-                itemsIndexed(it) {index,data ->
+                itemsIndexed(it) { index, data ->
                     ItemSongSheet(
                         data = data,
                         index = index

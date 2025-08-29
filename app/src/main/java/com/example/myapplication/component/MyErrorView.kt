@@ -1,4 +1,4 @@
-package com.example.myapplication.component.song
+package com.example.myapplication.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -41,7 +41,7 @@ fun MyErrorView (
             .padding(SpaceOuter)
     ){
         Image(
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier.size(200.dp),
             painter = painterResource(id = icon),
             contentDescription = null
         )
