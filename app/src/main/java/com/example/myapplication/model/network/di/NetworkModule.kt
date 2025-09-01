@@ -1,5 +1,7 @@
 package com.example.myapplication.model.network.di
 
+import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.example.myapplication.MyApplication
 import com.example.myapplication.config.Config
 import kotlinx.serialization.json.Json
 import okhttp3.Call
@@ -31,6 +33,8 @@ object NetworkModule {
                         HttpLoggingInterceptor.Level.NONE
                 )
             })
+
+            .addInterceptor(ChuckerInterceptor.Builder(MyApplication.instance).build())
 
             .build()
     }

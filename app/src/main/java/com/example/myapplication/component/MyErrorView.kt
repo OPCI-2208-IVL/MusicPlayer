@@ -18,9 +18,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import com.example.myapplication.exception.CommonException
 import com.example.myapplication.extension.clickableNoRipple
 import com.example.myapplication.ui.theme.Space3XLarge
 import com.example.myapplication.ui.theme.SpaceOuter
+
+@Composable
+fun MyErrorView (
+    modifier: Modifier = Modifier,
+    exception: CommonException,
+    retryButtonText: String = "重新加载",
+    onRetryClick: () -> Unit = {}
+){
+    MyErrorView(
+        modifier = modifier,
+        message = exception.tipString!!,
+        icon = exception.tipIcon!!,
+        retryButtonText = retryButtonText,
+        onRetryClick =  onRetryClick
+    )
+}
 
 @Composable
 fun MyErrorView (

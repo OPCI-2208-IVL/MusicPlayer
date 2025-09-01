@@ -1,5 +1,6 @@
 package com.example.myapplication.feature.sheetdetail
 
+import com.example.myapplication.exception.CommonException
 import com.example.myapplication.model.Sheet
 
 sealed interface SheetDetailUiState {
@@ -7,5 +8,5 @@ sealed interface SheetDetailUiState {
 
     data object Loading : SheetDetailUiState
 
-    data class Error(val message: String) : SheetDetailUiState
+    data class Error(val exception: CommonException) : SheetDetailUiState
 }

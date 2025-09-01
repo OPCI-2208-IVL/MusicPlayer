@@ -67,6 +67,9 @@ dependencies {
 
     implementation(libs.androidx.compose.material.iconsExtended)
 
+    debugImplementation(libs.chucker)
+    releaseImplementation(libs.chucker.no.op)
+
     //kotlin序列化
     //https://kotlinlang.org/docs/serialization.html
     implementation(libs.kotlinx.serialization.json)
