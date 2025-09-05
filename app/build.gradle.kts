@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "1.9.23"
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -92,4 +94,15 @@ dependencies {
     //图片加载框架
     //https://github.com/coil-kt/coil
     implementation(libs.coil.compose)
+
+    //region 依赖注入
+    //https://developer.android.google.cn/training/dependency-injection/hilt-android?hl=zh-cn
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    kspAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
+    //endregion
+
+    compileOnly(libs.ksp.gradlePlugin)
 }

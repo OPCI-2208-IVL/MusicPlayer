@@ -6,19 +6,21 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.repository.SheetRepository
 import com.example.myapplication.exception.localException
 import com.example.myapplication.result.asResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SheetDetailViewModel(
-    savedStateHandle: SavedStateHandle
+@HiltViewModel
+class SheetDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private var sheetRepository: SheetRepository
 ): ViewModel() {
     private val _data = MutableStateFlow<SheetDetailUiState>(SheetDetailUiState.Loading)
     val data: StateFlow<SheetDetailUiState> = _data
     private val sheetID: String = checkNotNull(savedStateHandle[SHEET_ID])
-
-    private val sheetRepository = SheetRepository()
 
     init {
         loadData()

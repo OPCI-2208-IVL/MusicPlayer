@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.component.MyCenterTopAppBar
 import com.example.myapplication.component.MyErrorView
 import com.example.myapplication.component.MyLoading
@@ -20,7 +20,7 @@ import com.example.myapplication.model.Sheet
 @Composable
 fun SheetDetailRoute(
     finishPage: () -> Unit,
-    viewModel: SheetDetailViewModel = viewModel()
+    viewModel: SheetDetailViewModel = hiltViewModel()
 ) {
     val data by viewModel.data.collectAsState()
     SheetDetailScreen(

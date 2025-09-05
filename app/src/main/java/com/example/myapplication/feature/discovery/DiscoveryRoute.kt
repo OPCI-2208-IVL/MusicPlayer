@@ -28,7 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.component.song.ItemSong
 import com.example.myapplication.feature.sheet.ItemSheet
 import com.example.myapplication.model.ViewData
@@ -42,7 +42,7 @@ import com.example.myapplication.ui.theme.SpaceTip
 fun DiscoveryRoute(
     toSearch: () -> Unit,
     toSheetDetail: (String) -> Unit,
-    viewModel: DiscoverViewModel = viewModel()
+    viewModel: DiscoverViewModel = hiltViewModel()
 ){
     val datum by viewModel.datum.collectAsState()
     DiscoveryScreen(
