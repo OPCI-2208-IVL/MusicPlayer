@@ -10,14 +10,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
 import com.example.myapplication.R
-import com.example.myapplication.util.abs2rel
 import com.example.myapplication.ui.theme.LocalDividerColor
+import com.example.myapplication.util.ResourceUtil.abs2rel
 
 @Composable
 fun YaASyncImage(
     model: String?,
     modifier: Modifier = Modifier
-):Unit {
+) {
     if(model == null) {
         Image(
             painter = painterResource(R.drawable.placeholder),

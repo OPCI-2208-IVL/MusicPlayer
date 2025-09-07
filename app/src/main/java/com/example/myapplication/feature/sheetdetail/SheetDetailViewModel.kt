@@ -1,10 +1,12 @@
 package com.example.myapplication.feature.sheetdetail
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.repository.SheetRepository
 import com.example.myapplication.exception.localException
+import com.example.myapplication.feature.mediaplayer.BaseMediaPlayerViewModel
+import com.example.myapplication.media.MediaServiceConnection
+import com.example.myapplication.model.Sheet
 import com.example.myapplication.result.asResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,11 +18,16 @@ import javax.inject.Inject
 @HiltViewModel
 class SheetDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private var sheetRepository: SheetRepository
-): ViewModel() {
+    private var sheetRepository: SheetRepository,
+    mediaServiceConnection: MediaServiceConnection
+): BaseMediaPlayerViewModel(
+    mediaServiceConnection
+) {
     private val _data = MutableStateFlow<SheetDetailUiState>(SheetDetailUiState.Loading)
     val data: StateFlow<SheetDetailUiState> = _data
     private val sheetID: String = checkNotNull(savedStateHandle[SHEET_ID])
+
+    private lateinit var datum: Sheet
 
     init {
         loadData()
@@ -33,7 +40,8 @@ class SheetDetailViewModel @Inject constructor(
                     .asResult()
                     .collectLatest { r ->
                         if (r.isSuccess) {
-                            _data.value = SheetDetailUiState.Success(r.getOrThrow().data !!)
+                             datum = r.getOrThrow().data !!
+                            _data.value = SheetDetailUiState.Success( datum )
                         }else{
                             _data.value = SheetDetailUiState.Error( r.exceptionOrNull()!!.localException())
                         }
@@ -46,5 +54,9 @@ class SheetDetailViewModel @Inject constructor(
 
     fun onRetryClick() {
         loadData()
+    }
+
+    fun onSongClick(index: Int) {
+        setMediaAndPlay(datum.songs!!, index)
     }
 }

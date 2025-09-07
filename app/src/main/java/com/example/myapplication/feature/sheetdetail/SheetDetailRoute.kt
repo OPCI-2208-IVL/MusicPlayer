@@ -1,5 +1,6 @@
 package com.example.myapplication.feature.sheetdetail
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +27,8 @@ fun SheetDetailRoute(
     SheetDetailScreen(
         finishPage = finishPage,
         data = data,
-        onRetry = viewModel::onRetryClick
+        onRetry = viewModel::onRetryClick,
+        onSongClick = viewModel::onSongClick
     )
 }
 
@@ -36,6 +38,7 @@ fun SheetDetailScreen(
     data: SheetDetailUiState = SheetDetailUiState.Loading,
     finishPage: () -> Unit,
     onRetry: () -> Unit,
+    onSongClick: (Int) -> Unit
 ) {
     when (data) {
         is SheetDetailUiState.Loading -> {
@@ -45,7 +48,8 @@ fun SheetDetailScreen(
         is SheetDetailUiState.Success -> {
             ContentView(
                 finishPage = finishPage,
-                data = data.sheet
+                data = data.sheet,
+                onSongClick = onSongClick
             )
         }
 
@@ -63,6 +67,7 @@ fun SheetDetailScreen(
 fun ContentView(
     finishPage: () -> Unit,
     data: Sheet,
+    onSongClick: (Int) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -82,7 +87,8 @@ fun ContentView(
                 itemsIndexed(it) { index, data ->
                     ItemSongSheet(
                         data = data,
-                        index = index
+                        index = index,
+                        modifier = Modifier.clickable { onSongClick(index) }
                     )
                 }
             }

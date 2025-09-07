@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization") version "1.9.23"
+    // 移除: alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization) // 使用版本目录中的定义
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -19,6 +19,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -31,16 +34,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17 // 改为 17
+        targetCompatibility = JavaVersion.VERSION_17 // 改为 17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17" // 改为 17
     }
     buildFeatures {
         compose = true
-
         buildConfig = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.13" // 添加 Compose 编译器版本
     }
 }
 
@@ -56,9 +61,11 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.tools.core)
+//  implementation(libs.androidx.tools.core)
     implementation(libs.androidx.foundation.android)
     implementation(libs.androidx.foundation.android)
+    implementation(libs.androidx.media3.session)
+    implementation(libs.androidx.media3.exoplayer)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -103,6 +110,8 @@ dependencies {
     kspAndroidTest(libs.hilt.android.compiler)
     androidTestImplementation(libs.hilt.android.testing)
     //endregion
+
+    implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.guava)
 
     compileOnly(libs.ksp.gradlePlugin)
 }

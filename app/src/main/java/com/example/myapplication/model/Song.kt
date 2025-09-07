@@ -1,5 +1,6 @@
 package com.example.myapplication.model
 
+import androidx.media3.common.MediaMetadata
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,6 +18,25 @@ data class Song(
     val totalTrackCount: Int = 1,
     val duration: Int=0,
 )
+
+fun MediaMetadata.Builder.from(data: Song): MediaMetadata.Builder {
+    setTitle(data.title)
+    setDisplayTitle(data.title)
+    setArtist(data.artist)
+    setAlbumTitle(data.album)
+    setGenre(data.genre)
+    setTrackNumber(data.trackNumber)
+    setTotalTrackCount(data.totalTrackCount)
+    setIsBrowsable(false)
+    setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC)
+    setIsPlayable(true)
+    // The duration from the JSON is given in seconds, but the rest of the code works in
+    // milliseconds. Here's where we convert to the proper units.
+    //    val durationMs = TimeUnit.SECONDS.toMillis(data.duration)
+    //    val bundle = Bundle()
+    //    bundle.putLong("durationMs", durationMs)
+    return this
+}
 
 object DiscoverPreviewSongData{
     val songs = listOf(
