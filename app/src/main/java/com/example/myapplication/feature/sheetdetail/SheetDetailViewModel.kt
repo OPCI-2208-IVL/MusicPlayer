@@ -57,6 +57,10 @@ class SheetDetailViewModel @Inject constructor(
     }
 
     fun onSongClick(index: Int) {
-        setMediaAndPlay(datum.songs!!, index)
+        setMediaAndPlay(
+            songs =  datum.songs!!,
+            index =  index,
+            navigateToMusicPlayer = true
+        )
     }
 }

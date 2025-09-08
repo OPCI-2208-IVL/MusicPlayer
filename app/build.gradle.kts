@@ -113,5 +113,7 @@ dependencies {
 
     implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.guava)
 
+    implementation(libs.androidx.constraintlayout.compose)
+
     compileOnly(libs.ksp.gradlePlugin)
 }

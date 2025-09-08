@@ -10,6 +10,7 @@ import androidx.media3.session.SessionToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
@@ -28,6 +29,14 @@ class MediaServiceConnection(
 
     private val playerListener: PlayerListener = PlayerListener()
 
+    val nowPlaying = MutableStateFlow<MediaItem>(NOTHING_PLAYING)
+
+    val networkFailure = MutableStateFlow<Boolean>(false)
+
+    val playbackState = MutableStateFlow<PlaybackState>(EMPTY_PLAYBACK_STATE)
+
+    val currentPosition = MutableStateFlow<Long>(0)
+
     private inner class PlayerListener : Player.Listener {
 
         override fun onEvents(player: Player, events: Player.Events) {
@@ -36,17 +45,18 @@ class MediaServiceConnection(
                 || events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED)
                 || events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)
             ) {
-//                updatePlaybackState(player)
-//                if (player.playbackState != Player.STATE_IDLE) {
-//                    networkFailure.value = false
-//                }
-//            }
-//            if (events.contains(Player.EVENT_MEDIA_METADATA_CHANGED)
-//                || events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)
-//                || events.contains(Player.EVENT_PLAY_WHEN_READY_CHANGED)
-//            ) {
+                updatePlaybackState(player)
+                if (player.playbackState != Player.STATE_IDLE) {
 
-//                updateNowPlaying(player)
+                    networkFailure.value = false
+                }
+            }
+            if (events.contains(Player.EVENT_MEDIA_METADATA_CHANGED)
+                || events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)
+                || events.contains(Player.EVENT_PLAY_WHEN_READY_CHANGED)
+            ) {
+
+                updateNowPlaying(player)
 
 //                player.currentMediaItem?.mediaId?.let {
 //                    if (lyric.value.songId != it && Strings.isNullOrEmpty(lyric.value.lyric)) {
@@ -92,6 +102,16 @@ class MediaServiceConnection(
         }
     }
 
+    fun updateNowPlaying(
+        player: Player
+    ){
+        val mediaItem = player.currentMediaItem ?: MediaItem.EMPTY
+        if (mediaItem == MediaItem.EMPTY){
+            return
+        }
+        nowPlaying.value = mediaItem
+    }
+
     fun setMediaAndPlay(datum: List<MediaItem>, startIndex: Int){
         setMedias(datum,startIndex)
         mediaController!!.prepare()
@@ -102,6 +122,16 @@ class MediaServiceConnection(
         mediaController!!.setMediaItems(
             datum, startIndex, startPositionMs
         )
+    }
+
+    fun updatePlaybackState(player: Player){
+        playbackState.value =
+            PlaybackState(
+                player.playbackState,
+                player.playWhenReady,
+                player.duration
+            )
+        currentPosition.value = player.currentPosition
     }
 
     fun playOrPause(){
@@ -120,7 +150,7 @@ class MediaServiceConnection(
     }
 
     fun release() {
-//        nowPlaying.value = NOTHING_PLAYING
+        nowPlaying.value = NOTHING_PLAYING
         mediaController?.let {
             it.removeListener(playerListener)
             it.release()

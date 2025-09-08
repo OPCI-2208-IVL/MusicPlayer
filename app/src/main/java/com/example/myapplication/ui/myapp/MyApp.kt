@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.example.myapplication.feature.main.mainScreen
 import com.example.myapplication.feature.main.navigateToMain
+import com.example.myapplication.feature.mediaplayer.musicPlayerScreen
+import com.example.myapplication.feature.mediaplayer.navigateToMusicPlayer
 import com.example.myapplication.feature.sheetdetail.navigateToSheetDetail
 import com.example.myapplication.feature.sheetdetail.sheetDetail
 import com.example.myapplication.feature.splash.SPlASH_ROUTE
@@ -20,6 +22,10 @@ fun Myapp(navController: NavHostController) {
             toSheetDetail = navController::navigateToSheetDetail
         )
         sheetDetail(
+            finishPage = navController::popBackStack,
+            toMusicPlayer = navController::navigateToMusicPlayer
+        )
+        musicPlayerScreen(
             finishPage = navController::popBackStack
         )
     }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import com.example.myapplication.model.Sheet
 @Composable
 fun SheetDetailRoute(
     finishPage: () -> Unit,
+    toMusicPlayer: () -> Unit,
     viewModel: SheetDetailViewModel = hiltViewModel()
 ) {
     val data by viewModel.data.collectAsState()
@@ -30,6 +32,14 @@ fun SheetDetailRoute(
         onRetry = viewModel::onRetryClick,
         onSongClick = viewModel::onSongClick
     )
+
+    LaunchedEffect(viewModel.toMusicPlayer.value) {
+        if (viewModel.toMusicPlayer.value){
+            toMusicPlayer()
+            viewModel.clearMusicPlayer()
+        }
+    }
+
 }
 
 
