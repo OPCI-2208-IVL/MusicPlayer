@@ -3,7 +3,6 @@ package com.example.myapplication.feature.mediaplayer
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +41,7 @@ import com.example.myapplication.extension.clickableNoRipple
 import com.example.myapplication.R
 import com.example.myapplication.extension.asFormatTimeString
 import com.example.myapplication.media.PlaybackState
+import com.example.myapplication.model.PlaybackMode
 import com.example.myapplication.ui.theme.SpaceLarge
 import com.example.myapplication.ui.theme.SpaceOuter
 
@@ -53,13 +53,20 @@ fun MusicPlayerRoute(
     val nowPlaying by viewModel.nowPlaying.collectAsStateWithLifecycle()
     val playbackState by viewModel.playbackState.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
+//    val playbackMode by viewModel.playbackMode.collectAsStateWithLifecycle()
 
     MusicPlayerScreen(
         finishPage = finishPage,
         nowPlaying = nowPlaying,
         playbackState = playbackState,
         currentPosition = currentPosition,
-        onSeek = viewModel::onSeek
+        onSeek = viewModel::onSeek,
+        playbackMode = PlaybackMode.REPEAT_UNSPECIFIED,
+        onChangeRepeatModeClick = {},
+        onPreviousClick = viewModel::onPreviousClick,
+        onPlayOrPauseClick = viewModel::onPlayOrPauseClick,
+        onNextClick = viewModel::onNextClick,
+        onMusicListClick = {}
     )
 }
 
@@ -71,7 +78,13 @@ fun MusicPlayerScreen(
     nowPlaying: MediaItem,
     playbackState: PlaybackState,
     currentPosition: Long,
-    onSeek: (Float) -> Unit
+    onSeek: (Float) -> Unit,
+    playbackMode: PlaybackMode,
+    onChangeRepeatModeClick: () -> Unit,
+    onPreviousClick: () -> Unit,
+    onPlayOrPauseClick: () -> Unit,
+    onNextClick: () -> Unit,
+    onMusicListClick: () -> Unit
 ) {
     Scaffold (
         modifier = Modifier.fillMaxSize(),
@@ -156,11 +169,12 @@ fun MusicPlayerScreen(
 
                     PlayerMediaButtons(
                         isPlaying = playbackState.isPlaying,
-                        onChangeRepeatModeClick = {},
-                        onPreviousClick = {},
-                        onPlayOrPauseClick = {},
-                        onNextClick = {},
-                        onMusicListClick = {}
+                        playRepeatMode = playbackMode,
+                        onChangeRepeatModeClick = onChangeRepeatModeClick,
+                        onPreviousClick = onPreviousClick,
+                        onPlayOrPauseClick = onPlayOrPauseClick,
+                        onNextClick = onNextClick,
+                        onMusicListClick = onMusicListClick
                     )
                 }
             }
@@ -222,7 +236,7 @@ fun PlayMediaOtherButtons(
 @Composable
 fun PlayerMediaButtons(
     isPlaying: Boolean,
-//    playRepeatMode: PlaybackMode,
+    playRepeatMode: PlaybackMode,
     onChangeRepeatModeClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onPlayOrPauseClick: () -> Unit,
@@ -236,12 +250,11 @@ fun PlayerMediaButtons(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         MusicControlButton(
-//            when (playRepeatMode) {
-//                PlaybackMode.REPEAT_LIST -> R.drawable.music_repeat_list
-//                PlaybackMode.REPEAT_ONE -> R.drawable.music_repeat_single
-//                PlaybackMode.REPEAT_SHUFFLE, PlaybackMode.REPEAT_UNSPECIFIED -> R.drawable.music_repeat_random
-//            },
-            R.drawable.music_repeat_list,
+            when (playRepeatMode) {
+                PlaybackMode.REPEAT_LIST -> R.drawable.music_repeat_list
+                PlaybackMode.REPEAT_ONE -> R.drawable.music_repeat_single
+                PlaybackMode.REPEAT_SHUFFLE, PlaybackMode.REPEAT_UNSPECIFIED -> R.drawable.music_repeat_random
+            },
             modifier = Modifier
                 .weight(1f)
                 .clickableNoRipple {

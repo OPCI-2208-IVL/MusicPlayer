@@ -9,7 +9,9 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
@@ -28,6 +30,8 @@ class MediaServiceConnection(
     private lateinit var currentPlayer: Player
 
     private val playerListener: PlayerListener = PlayerListener()
+
+    var publicProgressJob: Job? = null
 
     val nowPlaying = MutableStateFlow<MediaItem>(NOTHING_PLAYING)
 
@@ -118,7 +122,7 @@ class MediaServiceConnection(
         mediaController!!.play()
     }
 
-    fun setMedias(datum: List<MediaItem>, startIndex: Int, startPositionMs: Long = 0) {
+    private fun setMedias(datum: List<MediaItem>, startIndex: Int, startPositionMs: Long = 0) {
         mediaController!!.setMediaItems(
             datum, startIndex, startPositionMs
         )
@@ -132,6 +136,27 @@ class MediaServiceConnection(
                 player.duration
             )
         currentPosition.value = player.currentPosition
+        checkPublishProgressTask()
+    }
+
+    private fun checkPublishProgressTask(){
+        if (playbackState.value.isPlaying){
+            if (publicProgressJob != null){
+                return
+            }
+
+            publicProgressJob = scope.launch {
+                while (playbackState.value.isPlaying){
+                    currentPosition.value = mediaController?.currentPosition?: 0
+                    delay(16)
+
+
+                }
+            }
+        } else {
+            publicProgressJob?.cancel()
+            publicProgressJob = null
+        }
     }
 
     fun playOrPause(){
@@ -156,6 +181,28 @@ class MediaServiceConnection(
             it.release()
         }
         instance = null
+    }
+
+    fun seekTo(position: Long) {
+        mediaController?.run {
+            seekTo(position)
+            if (!isPlaying)
+                play()
+        }
+    }
+
+    fun seekToPrevious() {
+        mediaController?.run {
+            seekToPrevious()
+            play()
+        }
+    }
+
+    fun seekToNext() {
+        mediaController?.run {
+            seekToNext()
+            play()
+        }
     }
 
     companion object{

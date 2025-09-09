@@ -69,6 +69,18 @@ open class BaseMediaPlayerViewModel(
     }
 
     fun onSeek(fl: Float) {
+        mediaServiceConnection.seekTo(fl.toLong())
+    }
 
+    fun onPreviousClick() {
+        mediaServiceConnection.seekToPrevious()
+    }
+
+    fun onPlayOrPauseClick() {
+        mediaServiceConnection.playOrPause()
+    }
+
+    fun onNextClick() {
+        mediaServiceConnection.seekToNext()
     }
 }
