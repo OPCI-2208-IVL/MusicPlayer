@@ -116,4 +116,22 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
 
     compileOnly(libs.ksp.gradlePlugin)
+
+    //region room
+
+    implementation(libs.androidx.room.runtime)
+
+    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
+    // See Add the KSP plugin to your project
+    ksp(libs.androidx.room.compiler)
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation(libs.androidx.room.ktx)
+
+    // optional - Test helpers
+    testImplementation(libs.androidx.room.testing)
+
+    // optional - Paging 3 Integration
+    implementation(libs.androidx.room.paging)
+    //endregion
 }

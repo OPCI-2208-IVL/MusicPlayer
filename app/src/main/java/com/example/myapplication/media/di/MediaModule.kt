@@ -2,6 +2,7 @@ package com.example.myapplication.media.di
 
 import android.content.ComponentName
 import android.content.Context
+import com.example.myapplication.data.repository.SongRepository
 import com.example.myapplication.media.MediaService
 import com.example.myapplication.media.MediaServiceConnection
 import dagger.Module
@@ -12,17 +13,19 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MediaModel {
+object MediaModule {
     @Provides
     fun provideMusicServiceConnection(
         @ApplicationContext context: Context,
+        songRepository: SongRepository
     ): MediaServiceConnection{
         return MediaServiceConnection.getInstance(
             context,
             ComponentName(
                 context,
                 MediaService::class.java
-            )
+            ),
+            songRepository
         )
     }
 }

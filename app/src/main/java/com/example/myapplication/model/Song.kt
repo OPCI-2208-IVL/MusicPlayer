@@ -1,6 +1,8 @@
 package com.example.myapplication.model
 
 import androidx.media3.common.MediaMetadata
+import com.example.myapplication.database.model.SongEntity
+import com.example.myapplication.util.ResourceUtil
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,7 +10,7 @@ data class Song(
     val id: String,
     val title: String,
     val uri: String,
-    val icon: String? = "",
+    val icon: String,
     val album: String,
     val artist: String,
     val genre: String,
@@ -17,7 +19,24 @@ data class Song(
     val trackNumber: Int = 1,
     val totalTrackCount: Int = 1,
     val duration: Int=0,
-)
+){
+    fun toSongEntity(): SongEntity {
+        return SongEntity(
+            id = id,
+            title = title,
+            uri = ResourceUtil.abs2rel(uri),
+            icon = icon,
+            album = album,
+            artist = artist,
+            genre = genre,
+            lyricStyle = lyricStyle,
+            lyric = lyric,
+            trackNumber = trackNumber,
+            totalTrackCount = totalTrackCount,
+            playList = true,
+        )
+    }
+}
 
 fun MediaMetadata.Builder.from(data: Song): MediaMetadata.Builder {
     setTitle(data.title)
@@ -85,6 +104,7 @@ object DiscoverPreviewSongData{
             id = "004",
             title = "City Lights",
             uri = "content://media/audio/004",
+            icon = "https://example.com/cover4.png",
             album = "Urban Tales",  // 测试无artist情况
             artist = "",
             genre = "Electronic",

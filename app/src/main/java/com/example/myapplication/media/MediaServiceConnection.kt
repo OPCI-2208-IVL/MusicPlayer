@@ -7,6 +7,7 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import com.example.myapplication.data.repository.SongRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -19,7 +20,8 @@ import kotlin.coroutines.CoroutineContext
 
 class MediaServiceConnection(
     context: Context,
-    serviceComponent: ComponentName
+    serviceComponent: ComponentName,
+    private val songRepository: SongRepository
 ) {
     private var mediaController: MediaController? = null
 
@@ -103,7 +105,14 @@ class MediaServiceConnection(
                 .await()
 
             mediaController!!.addListener(playerListener)
+
+            initPlayList()
         }
+    }
+
+    private suspend fun initPlayList(){
+        val datum = songRepository.getAllPlayListAsync()
+        if (datum.isEmpty()) return
     }
 
     fun updateNowPlaying(
@@ -213,10 +222,11 @@ class MediaServiceConnection(
 
         fun getInstance(
             context: Context,
-            serviceComponent: ComponentName
+            serviceComponent: ComponentName,
+            songRepository: SongRepository
         ) =
             instance ?: synchronized(this){
-                instance ?: MediaServiceConnection(context,serviceComponent).also {
+                instance ?: MediaServiceConnection(context,serviceComponent, songRepository ).also {
                     instance = it
                 }
             }
