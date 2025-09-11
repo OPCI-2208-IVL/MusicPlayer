@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.ui.myapp
 
 import com.example.myapplication.database.LocalDatabase
 

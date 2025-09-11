@@ -8,6 +8,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.MimeTypes
 import com.example.myapplication.data.repository.SongRepository
+import com.example.myapplication.data.repository.UserDataRepository
 import com.example.myapplication.media.MediaServiceConnection
 import com.example.myapplication.model.Song
 import com.example.myapplication.model.from
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
 
 open class BaseMediaPlayerViewModel(
     private val mediaServiceConnection: MediaServiceConnection,
-    private val songRepository: SongRepository
+    private val songRepository: SongRepository,
+    userDataRepository: UserDataRepository
 ): ViewModel() {
 
     var toMusicPlayer = mutableStateOf<Boolean>(false)
@@ -31,6 +33,12 @@ open class BaseMediaPlayerViewModel(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = 0,
+    )
+
+    val playListDatum = songRepository.getAllPlayList().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
     )
 
      fun setMediaAndPlay(

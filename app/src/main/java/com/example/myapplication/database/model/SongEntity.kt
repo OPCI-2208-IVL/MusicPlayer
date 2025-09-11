@@ -1,9 +1,13 @@
 package com.example.myapplication.database.model
 
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.MimeTypes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.myapplication.model.Song
+import com.example.myapplication.model.from
 
 @Entity(tableName = "song")
 data class SongEntity(
@@ -49,3 +53,16 @@ data class SongEntity(
         )
     }
 }
+
+internal fun SongEntity.asMediaItem(): MediaItem =
+    MediaItem.Builder()
+        .apply {
+            setMediaId(id)
+            setUri(uri)
+            setMimeType(MimeTypes.AUDIO_MPEG)
+            setMediaMetadata(
+                MediaMetadata.Builder()
+                    .from(this@asMediaItem)
+                    .build()
+            )
+        }.build()

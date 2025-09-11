@@ -30,6 +30,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -42,13 +43,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.R
 import com.example.myapplication.component.NavigationBar
+import com.example.myapplication.database.model.SongEntity
 import com.example.myapplication.extension.clickableNoRipple
 import com.example.myapplication.feature.discovery.DiscoveryRoute
 import com.example.myapplication.feature.my.MyRoute
 import com.example.myapplication.feature.settings.SettingsRoute
 import com.example.myapplication.model.UserData
+import com.example.myapplication.ui.myapp.MyAppUiState
 import com.example.myapplication.ui.theme.SpaceExtraOuter
 import com.example.myapplication.ui.theme.SpaceExtraSmall
 import com.example.myapplication.ui.theme.SpaceMedium
@@ -59,9 +63,17 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainRoute(
     toSheetDetail: (String) -> Unit,
+    appUiState: MyAppUiState,
+    toMusicPlayer: () -> Unit,
+    viewModel: MainViewModel = hiltViewModel()
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    val musicDatum by viewModel.playListDatum.collectAsState()
+
+    val isLogin by appUiState.isLogin.collectAsState()
+    val userData by appUiState.userData.collectAsState()
 
     val toggleDrawer: () -> Unit = {
         scope.launch {
@@ -79,7 +91,8 @@ fun MainRoute(
                 modifier = Modifier.fillMaxHeight()
             ) {
                 MainDrawerView(
-                    userData = UserData(),
+                    userData = userData,
+                    isLogin= isLogin,
                     toProfile = {},
                     toScan = {},
                     toLogin = {},
@@ -90,7 +103,9 @@ fun MainRoute(
     ) {
         MainScreen(
             toSheetDetail = toSheetDetail,
-            toggleDrawer = toggleDrawer
+            toggleDrawer = toggleDrawer,
+            datum = musicDatum,
+            toMusicPlayer = toMusicPlayer
         )
     }
 }
@@ -98,7 +113,9 @@ fun MainRoute(
 @Composable
 fun MainScreen(
     toSheetDetail: (String) -> Unit,
-    toggleDrawer: () -> Unit
+    toggleDrawer: () -> Unit,
+    datum: List<SongEntity> = listOf(),
+    toMusicPlayer: () -> Unit
 ) {
     val pageState = rememberPagerState {
         3
@@ -131,6 +148,21 @@ fun MainScreen(
             }
         }
 
+        if (datum.isNotEmpty()){
+            Text("playlist", Modifier.clickable { toMusicPlayer() })
+//            MusicPlayerBottomBar(
+//                modifier = Modifier,
+//                title = ,
+//                artists,
+//                icon,
+//                isPlaying,
+//                currentPosition,
+//                duration,
+//                recordRotation,
+//                onPlayOrPauseClick,
+//                onMusicListClick
+//            )
+        }
 
         NavigationBar(
             destinations = TopLeveDestination.entries,
@@ -149,6 +181,7 @@ fun MainScreen(
 @Composable
 fun MainDrawerView(
     userData: UserData,
+    isLogin: Boolean,
     toProfile: () -> Unit,
     toScan: () -> Unit,
     toLogin: () -> Unit,
@@ -164,7 +197,7 @@ fun MainDrawerView(
 
         UserInfoView(
             userData = userData,
-            isLogin = userData.isLogin(),
+            isLogin = isLogin,
             toProfile = toProfile,
             toScan = toScan,
             toLogin = toLogin,

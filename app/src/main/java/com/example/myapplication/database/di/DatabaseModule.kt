@@ -2,7 +2,7 @@ package com.example.myapplication.database.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.myapplication.MyAppState
+import com.example.myapplication.ui.myapp.MyAppState
 import com.example.myapplication.database.LocalDatabase
 import dagger.Module
 import dagger.Provides

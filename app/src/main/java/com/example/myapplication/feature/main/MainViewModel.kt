@@ -1,18 +1,20 @@
-package com.example.myapplication.feature.mediaplayer
+package com.example.myapplication.feature.main
 
 import com.example.myapplication.data.repository.SongRepository
 import com.example.myapplication.data.repository.UserDataRepository
+import com.example.myapplication.feature.mediaplayer.BaseMediaPlayerViewModel
 import com.example.myapplication.media.MediaServiceConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MusicPlayerViewModel @Inject constructor(
-    mediaServiceConnection: MediaServiceConnection,
+class MainViewModel @Inject constructor(
     songRepository: SongRepository,
-    userDataRepository: UserDataRepository
-): BaseMediaPlayerViewModel(
+    mediaServiceConnection: MediaServiceConnection,
+    userDataRepository: UserDataRepository,
+) : BaseMediaPlayerViewModel(
     mediaServiceConnection = mediaServiceConnection,
     songRepository = songRepository,
-    userDataRepository = userDataRepository
-)
+    userDataRepository = userDataRepository,
+){
+}

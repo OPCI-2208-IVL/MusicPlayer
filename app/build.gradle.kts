@@ -1,3 +1,5 @@
+import com.google.protobuf.gradle.GenerateProtoTask
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization) // 使用版本目录中的定义
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -61,7 +64,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.navigation.compose)
-//  implementation(libs.androidx.tools.core)
+    //implementation(libs.androidx.tools.core)
     implementation(libs.androidx.foundation.android)
     implementation(libs.androidx.foundation.android)
     implementation(libs.androidx.media3.session)
@@ -82,22 +85,17 @@ dependencies {
     //kotlin序列化
     //https://kotlinlang.org/docs/serialization.html
     implementation(libs.kotlinx.serialization.json)
-
     //region 网络框架
     //https://github.com/square/okhttp
     implementation(libs.okhttp)
-
     //网络框架日志框架
     implementation(libs.okhttp3.logging.interceptor)
-
     //类型安全网络框架
     //https://github.com/square/retrofit
     implementation(libs.retrofit2.retrofit)
-
     //让Retrofit支持Kotlinx Serialization
     implementation(libs.jakewharton.retrofit2.kotlinx.serialization.converter)
     //endregion
-
     //图片加载框架
     //https://github.com/coil-kt/coil
     implementation(libs.coil.compose)
@@ -118,20 +116,54 @@ dependencies {
     compileOnly(libs.ksp.gradlePlugin)
 
     //region room
-
     implementation(libs.androidx.room.runtime)
-
     // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
     // See Add the KSP plugin to your project
     ksp(libs.androidx.room.compiler)
-
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
-
     // optional - Test helpers
     testImplementation(libs.androidx.room.testing)
-
     // optional - Paging 3 Integration
     implementation(libs.androidx.room.paging)
     //endregion
+
+    implementation(libs.androidx.datastore)
+
+    implementation(libs.protobuf.kotlin.lite)
+}
+
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
+//https://github.com/google/dagger/issues/4097#issuecomment-1763781846
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        afterEvaluate {
+            val protoTask =
+                project.tasks.getByName("generate" + variant.name.replaceFirstChar { it.uppercaseChar() } + "Proto") as GenerateProtoTask
+
+            project.tasks.getByName("ksp" + variant.name.replaceFirstChar { it.uppercaseChar() } + "Kotlin") {
+                dependsOn(protoTask)
+                (this as org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool<*>).setSource(
+                    protoTask.outputBaseDir
+                )
+            }
+        }
+    }
 }

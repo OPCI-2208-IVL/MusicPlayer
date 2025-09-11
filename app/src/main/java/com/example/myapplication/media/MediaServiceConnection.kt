@@ -8,12 +8,17 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.example.myapplication.data.repository.SongRepository
+import com.example.myapplication.data.repository.UserDataRepository
+import com.example.myapplication.database.model.SongEntity
+import com.example.myapplication.database.model.asMediaItem
+import com.example.myapplication.model.PlaybackMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
@@ -21,7 +26,8 @@ import kotlin.coroutines.CoroutineContext
 class MediaServiceConnection(
     context: Context,
     serviceComponent: ComponentName,
-    private val songRepository: SongRepository
+    private val songRepository: SongRepository,
+    private val userDataRepository: UserDataRepository
 ) {
     private var mediaController: MediaController? = null
 
@@ -33,7 +39,7 @@ class MediaServiceConnection(
 
     private val playerListener: PlayerListener = PlayerListener()
 
-    var publicProgressJob: Job? = null
+    private var publicProgressJob: Job? = null
 
     val nowPlaying = MutableStateFlow<MediaItem>(NOTHING_PLAYING)
 
@@ -42,6 +48,8 @@ class MediaServiceConnection(
     val playbackState = MutableStateFlow<PlaybackState>(EMPTY_PLAYBACK_STATE)
 
     val currentPosition = MutableStateFlow<Long>(0)
+
+    private var lastPosition: Long = 0
 
     private inner class PlayerListener : Player.Listener {
 
@@ -113,6 +121,28 @@ class MediaServiceConnection(
     private suspend fun initPlayList(){
         val datum = songRepository.getAllPlayListAsync()
         if (datum.isEmpty()) return
+
+        val userData = userDataRepository.userData.first()
+        val startIndex = datum.indexOfFirst { it.id == userData.playMusicId }
+
+        mediaController?.run {
+            setMedias(datum.map(SongEntity::asMediaItem), startIndex, userData.playProgress)
+            if (userData.playRepeatMode.ordinal == PlaybackMode.REPEAT_SHUFFLE.ordinal) {
+                shuffleModeEnabled = true
+
+                repeatMode = Player.REPEAT_MODE_ALL
+            } else {
+                shuffleModeEnabled = false
+                repeatMode =
+                    if (userData.playRepeatMode.ordinal == PlaybackMode.REPEAT_ONE.ordinal) {
+                        Player.REPEAT_MODE_ONE
+                    } else
+                        Player.REPEAT_MODE_ALL
+            }
+
+            prepare()
+        }
+
     }
 
     fun updateNowPlaying(
@@ -158,7 +188,14 @@ class MediaServiceConnection(
                 while (playbackState.value.isPlaying){
                     currentPosition.value = mediaController?.currentPosition?: 0
                     delay(16)
-
+                    if (currentPosition.value - lastPosition >= 2000) {
+                        userDataRepository.saveRecentSong(
+                            mediaController!!.currentMediaItem!!.mediaId,
+                            currentPosition.value,
+                            playbackState.value.duration
+                        )
+                        lastPosition = currentPosition.value
+                    }
 
                 }
             }
@@ -223,10 +260,11 @@ class MediaServiceConnection(
         fun getInstance(
             context: Context,
             serviceComponent: ComponentName,
-            songRepository: SongRepository
+            songRepository: SongRepository,
+            userDataRepository: UserDataRepository
         ) =
             instance ?: synchronized(this){
-                instance ?: MediaServiceConnection(context,serviceComponent, songRepository ).also {
+                instance ?: MediaServiceConnection(context,serviceComponent, songRepository, userDataRepository ).also {
                     instance = it
                 }
             }

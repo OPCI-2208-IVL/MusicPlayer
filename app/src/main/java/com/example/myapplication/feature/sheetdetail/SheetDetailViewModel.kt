@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.repository.SheetRepository
 import com.example.myapplication.data.repository.SongRepository
+import com.example.myapplication.data.repository.UserDataRepository
 import com.example.myapplication.exception.localException
 import com.example.myapplication.feature.mediaplayer.BaseMediaPlayerViewModel
 import com.example.myapplication.media.MediaServiceConnection
@@ -21,10 +22,12 @@ class SheetDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private var sheetRepository: SheetRepository,
     mediaServiceConnection: MediaServiceConnection,
-    songRepository: SongRepository
+    songRepository: SongRepository,
+    userDataRepository: UserDataRepository
 ): BaseMediaPlayerViewModel(
     mediaServiceConnection,
-    songRepository
+    songRepository,
+    userDataRepository
 ) {
     private val _data = MutableStateFlow<SheetDetailUiState>(SheetDetailUiState.Loading)
     val data: StateFlow<SheetDetailUiState> = _data

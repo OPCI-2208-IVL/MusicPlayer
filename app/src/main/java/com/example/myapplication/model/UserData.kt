@@ -1,10 +1,14 @@
 package com.example.myapplication.model
 
+import com.example.myapplication.datastore.GlobalLyricStylePreferences
+import com.example.myapplication.datastore.SessionPreferences
+import com.example.myapplication.datastore.UserPreferences
+
 data class UserData(
     val notShowGuide: Boolean = false,
-//    val session: SessionPreferences = SessionPreferences.newBuilder().build(),
+    val session: SessionPreferences = SessionPreferences.newBuilder().build(),
 
-//    val user: UserPreferences = UserPreferences.newBuilder().build(),
+    val user: UserPreferences = UserPreferences.newBuilder().build(),
 
     val notShowTermsServiceAgreement: Boolean = false,
 
@@ -18,7 +22,7 @@ data class UserData(
 
     val playDuration: Long = 0,
 
-//    val globalLyricStyle: GlobalLyricStylePreferences = GlobalLyricStylePreferences.newBuilder().build(),
+    val globalLyricStyle: GlobalLyricStylePreferences = GlobalLyricStylePreferences.newBuilder().build(),
 ) {
     fun isLogin():Boolean {
         return false

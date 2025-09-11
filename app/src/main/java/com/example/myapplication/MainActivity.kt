@@ -7,12 +7,17 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.data.repository.UserDataRepository
 import com.example.myapplication.ui.myapp.Myapp
 import com.example.myapplication.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var userDataRepository: UserDataRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
@@ -25,7 +30,8 @@ class MainActivity : ComponentActivity() {
 
             AppTheme {
                 Myapp(
-                    navController
+                    navController =  navController,
+                    userDataRepository = userDataRepository
                 )
             }
         }

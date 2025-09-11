@@ -3,6 +3,7 @@ package com.example.myapplication.media.di
 import android.content.ComponentName
 import android.content.Context
 import com.example.myapplication.data.repository.SongRepository
+import com.example.myapplication.data.repository.UserDataRepository
 import com.example.myapplication.media.MediaService
 import com.example.myapplication.media.MediaServiceConnection
 import dagger.Module
@@ -17,7 +18,8 @@ object MediaModule {
     @Provides
     fun provideMusicServiceConnection(
         @ApplicationContext context: Context,
-        songRepository: SongRepository
+        songRepository: SongRepository,
+        userDataRepository: UserDataRepository
     ): MediaServiceConnection{
         return MediaServiceConnection.getInstance(
             context,
@@ -25,7 +27,8 @@ object MediaModule {
                 context,
                 MediaService::class.java
             ),
-            songRepository
+            songRepository,
+            userDataRepository
         )
     }
 }
