@@ -11,7 +11,7 @@ import com.example.myapplication.data.repository.SongRepository
 import com.example.myapplication.data.repository.UserDataRepository
 import com.example.myapplication.database.model.SongEntity
 import com.example.myapplication.database.model.asMediaItem
-import com.example.myapplication.model.PlaybackMode
+import com.example.myapplication.model.PlayRepeatMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -127,14 +127,14 @@ class MediaServiceConnection(
 
         mediaController?.run {
             setMedias(datum.map(SongEntity::asMediaItem), startIndex, userData.playProgress)
-            if (userData.playRepeatMode.ordinal == PlaybackMode.REPEAT_SHUFFLE.ordinal) {
+            if (userData.playRepeatMode.ordinal == PlayRepeatMode.REPEAT_SHUFFLE.ordinal) {
                 shuffleModeEnabled = true
 
                 repeatMode = Player.REPEAT_MODE_ALL
             } else {
                 shuffleModeEnabled = false
                 repeatMode =
-                    if (userData.playRepeatMode.ordinal == PlaybackMode.REPEAT_ONE.ordinal) {
+                    if (userData.playRepeatMode.ordinal == PlayRepeatMode.REPEAT_ONE.ordinal) {
                         Player.REPEAT_MODE_ONE
                     } else
                         Player.REPEAT_MODE_ALL
@@ -251,9 +251,21 @@ class MediaServiceConnection(
         }
     }
 
-    companion object{
-        private const val TAG = "MediaServiceConnection"
+    fun setRepeatMode(playRepeatMode: Int) {
+         if (playRepeatMode == PlayRepeatMode.REPEAT_SHUFFLE.ordinal){
+             currentPlayer.shuffleModeEnabled = true
+             currentPlayer.repeatMode = Player.REPEAT_MODE_ALL
+         } else {
+             currentPlayer.shuffleModeEnabled = false
+             currentPlayer.repeatMode =
+                 if (playRepeatMode == PlayRepeatMode.REPEAT_ONE.ordinal)
+                     Player.REPEAT_MODE_ONE
+                 else
+                     Player.REPEAT_MODE_ALL
+         }
+    }
 
+    companion object{
         @Volatile
         private var instance: MediaServiceConnection? = null
 

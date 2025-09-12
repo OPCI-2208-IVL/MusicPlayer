@@ -44,13 +44,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.common.MediaItem
 import com.example.myapplication.R
 import com.example.myapplication.component.NavigationBar
 import com.example.myapplication.database.model.SongEntity
 import com.example.myapplication.extension.clickableNoRipple
 import com.example.myapplication.feature.discovery.DiscoveryRoute
+import com.example.myapplication.feature.mediaplayer.component.MusicPlayerBottomBar
 import com.example.myapplication.feature.my.MyRoute
 import com.example.myapplication.feature.settings.SettingsRoute
+import com.example.myapplication.media.PlaybackState
 import com.example.myapplication.model.UserData
 import com.example.myapplication.ui.myapp.MyAppUiState
 import com.example.myapplication.ui.theme.SpaceExtraOuter
@@ -71,6 +74,10 @@ fun MainRoute(
     val scope = rememberCoroutineScope()
 
     val musicDatum by viewModel.playListDatum.collectAsState()
+    val nowPlaying by viewModel.nowPlaying.collectAsState()
+    val playbackState by viewModel.playbackState.collectAsState()
+    val currentPosition by viewModel.currentPosition.collectAsState()
+    val recordRotation by viewModel.recordRotation.collectAsState()
 
     val isLogin by appUiState.isLogin.collectAsState()
     val userData by appUiState.userData.collectAsState()
@@ -105,7 +112,13 @@ fun MainRoute(
             toSheetDetail = toSheetDetail,
             toggleDrawer = toggleDrawer,
             datum = musicDatum,
-            toMusicPlayer = toMusicPlayer
+            toMusicPlayer = toMusicPlayer,
+            nowPlaying = nowPlaying,
+            playbackState = playbackState,
+            currentPosition = currentPosition.toFloat(),
+            recordRotation = recordRotation,
+            onPlayOrPauseClick = viewModel::onPlayOrPauseClick,
+            onMusicListClick = viewModel::onMusicListClick ,
         )
     }
 }
@@ -115,7 +128,13 @@ fun MainScreen(
     toSheetDetail: (String) -> Unit,
     toggleDrawer: () -> Unit,
     datum: List<SongEntity> = listOf(),
-    toMusicPlayer: () -> Unit
+    toMusicPlayer: () -> Unit,
+    nowPlaying: MediaItem = MediaItem.EMPTY,
+    playbackState: PlaybackState,
+    currentPosition: Float = 0F,
+    recordRotation: Float = 0F,
+    onPlayOrPauseClick: () -> Unit,
+    onMusicListClick: () -> Unit,
 ) {
     val pageState = rememberPagerState {
         3
@@ -149,19 +168,18 @@ fun MainScreen(
         }
 
         if (datum.isNotEmpty()){
-            Text("playlist", Modifier.clickable { toMusicPlayer() })
-//            MusicPlayerBottomBar(
-//                modifier = Modifier,
-//                title = ,
-//                artists,
-//                icon,
-//                isPlaying,
-//                currentPosition,
-//                duration,
-//                recordRotation,
-//                onPlayOrPauseClick,
-//                onMusicListClick
-//            )
+            MusicPlayerBottomBar(
+                modifier = Modifier.clickable { toMusicPlayer() },
+                title = nowPlaying.mediaMetadata.title.toString(),
+                artists = nowPlaying.mediaMetadata.artist.toString(),
+                icon = nowPlaying.mediaMetadata.artworkUri.toString(),
+                isPlaying = playbackState.isPlaying,
+                currentPosition = currentPosition,
+                duration = playbackState.duration.toFloat(),
+                recordRotation = recordRotation,
+                onPlayOrPauseClick = onPlayOrPauseClick,
+                onMusicListClick = onMusicListClick
+            )
         }
 
         NavigationBar(

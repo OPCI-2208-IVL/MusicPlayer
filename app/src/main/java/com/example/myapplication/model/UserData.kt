@@ -14,7 +14,7 @@ data class UserData(
 
     val useDynamicColor: Boolean = false,
 
-    val playRepeatMode: PlaybackMode = PlaybackMode.REPEAT_LIST,
+    val playRepeatMode: PlayRepeatMode = PlayRepeatMode.REPEAT_LIST,
 
     val playMusicId: String = "",
 

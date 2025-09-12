@@ -7,7 +7,7 @@ import com.example.myapplication.datastore.SessionPreferences
 import com.example.myapplication.datastore.UserDataPreferences
 import com.example.myapplication.datastore.UserPreferences
 import com.example.myapplication.datastore.copy
-import com.example.myapplication.model.PlaybackMode
+import com.example.myapplication.model.PlayRepeatMode
 import com.example.myapplication.model.UserData
 import kotlinx.coroutines.flow.map
 import java.io.IOException
@@ -24,10 +24,10 @@ class UserPreferencesDatasource @Inject constructor(
             notShowTermsServiceAgreement = it.notShowTermsServiceAgreement,
             useDynamicColor = it.useDynamicColor,
             playRepeatMode = when (it.playRepeatMode) {
-                PlaybackModePreferences.PLAYBACK_MODE_REPEAT_LIST -> PlaybackMode.REPEAT_LIST
-                PlaybackModePreferences.PLAYBACK_MODE_REPEAT_ONE -> PlaybackMode.REPEAT_ONE
-                PlaybackModePreferences.PLAYBACK_MODE_SHUFFLE -> PlaybackMode.REPEAT_SHUFFLE
-                else -> PlaybackMode.REPEAT_UNSPECIFIED
+                PlaybackModePreferences.PLAYBACK_MODE_REPEAT_LIST -> PlayRepeatMode.REPEAT_LIST
+                PlaybackModePreferences.PLAYBACK_MODE_REPEAT_ONE -> PlayRepeatMode.REPEAT_ONE
+                PlaybackModePreferences.PLAYBACK_MODE_SHUFFLE -> PlayRepeatMode.REPEAT_SHUFFLE
+                else -> PlayRepeatMode.REPEAT_UNSPECIFIED
             },
             playMusicId = it.playMusicId,
             playProgress = it.playProgress,

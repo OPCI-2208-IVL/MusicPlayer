@@ -41,7 +41,7 @@ import com.example.myapplication.extension.clickableNoRipple
 import com.example.myapplication.R
 import com.example.myapplication.extension.asFormatTimeString
 import com.example.myapplication.media.PlaybackState
-import com.example.myapplication.model.PlaybackMode
+import com.example.myapplication.model.PlayRepeatMode
 import com.example.myapplication.ui.theme.SpaceLarge
 import com.example.myapplication.ui.theme.SpaceOuter
 
@@ -53,7 +53,7 @@ fun MusicPlayerRoute(
     val nowPlaying by viewModel.nowPlaying.collectAsStateWithLifecycle()
     val playbackState by viewModel.playbackState.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
-//    val playbackMode by viewModel.playbackMode.collectAsStateWithLifecycle()
+    val playRepeatMode by viewModel.playRepeatMode.collectAsStateWithLifecycle()
 
     MusicPlayerScreen(
         finishPage = finishPage,
@@ -61,8 +61,8 @@ fun MusicPlayerRoute(
         playbackState = playbackState,
         currentPosition = currentPosition,
         onSeek = viewModel::onSeek,
-        playbackMode = PlaybackMode.REPEAT_UNSPECIFIED,
-        onChangeRepeatModeClick = {},
+        playRepeatMode = playRepeatMode,
+        onChangeRepeatModeClick = viewModel::onChangeRepeatModeClick,
         onPreviousClick = viewModel::onPreviousClick,
         onPlayOrPauseClick = viewModel::onPlayOrPauseClick,
         onNextClick = viewModel::onNextClick,
@@ -79,7 +79,7 @@ fun MusicPlayerScreen(
     playbackState: PlaybackState,
     currentPosition: Long,
     onSeek: (Float) -> Unit,
-    playbackMode: PlaybackMode,
+    playRepeatMode: PlayRepeatMode,
     onChangeRepeatModeClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onPlayOrPauseClick: () -> Unit,
@@ -169,7 +169,7 @@ fun MusicPlayerScreen(
 
                     PlayerMediaButtons(
                         isPlaying = playbackState.isPlaying,
-                        playRepeatMode = playbackMode,
+                        playRepeatMode = playRepeatMode,
                         onChangeRepeatModeClick = onChangeRepeatModeClick,
                         onPreviousClick = onPreviousClick,
                         onPlayOrPauseClick = onPlayOrPauseClick,
@@ -236,7 +236,7 @@ fun PlayMediaOtherButtons(
 @Composable
 fun PlayerMediaButtons(
     isPlaying: Boolean,
-    playRepeatMode: PlaybackMode,
+    playRepeatMode: PlayRepeatMode,
     onChangeRepeatModeClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onPlayOrPauseClick: () -> Unit,
@@ -251,9 +251,9 @@ fun PlayerMediaButtons(
     ) {
         MusicControlButton(
             when (playRepeatMode) {
-                PlaybackMode.REPEAT_LIST -> R.drawable.music_repeat_list
-                PlaybackMode.REPEAT_ONE -> R.drawable.music_repeat_single
-                PlaybackMode.REPEAT_SHUFFLE, PlaybackMode.REPEAT_UNSPECIFIED -> R.drawable.music_repeat_random
+                PlayRepeatMode.REPEAT_LIST -> R.drawable.music_repeat_list
+                PlayRepeatMode.REPEAT_ONE -> R.drawable.music_repeat_single
+                PlayRepeatMode.REPEAT_SHUFFLE, PlayRepeatMode.REPEAT_UNSPECIFIED -> R.drawable.music_repeat_random
             },
             modifier = Modifier
                 .weight(1f)

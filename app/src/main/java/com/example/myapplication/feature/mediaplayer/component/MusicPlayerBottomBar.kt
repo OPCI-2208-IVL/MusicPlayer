@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import com.example.myapplication.component.MusicCircularProgressBar
 import com.example.myapplication.extension.clickableNoRipple
 import com.example.myapplication.ui.theme.SpaceExtraSmall
 import com.example.myapplication.ui.theme.SpaceExtraSmall2
@@ -59,20 +63,20 @@ fun MusicPlayerBottomBar(
                     .size(42.dp)
                     .graphicsLayer(rotationZ = recordRotation)
             ){
-//                MyRecordImage(
-//                    icon = icon, modifier = Modifier
-//                        .align(Alignment.Center)
-//                        .fillMaxSize(0.64f)
-//                )
-//
-//                Image(
-//                    painter =
-//                    painterResource(
-//                        id = R.drawable.music_record_ring,
-//                    ),
-//                    contentDescription = null,
-//                    modifier = Modifier.fillMaxSize(),
-//                )
+                MyRecordImage(
+                    icon = icon, modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxSize(0.64f)
+                )
+
+                Image(
+                    painter =
+                    painterResource(
+                        id = R.drawable.music_record_ring,
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
 
             Spacer(Modifier.size(SpaceMedium))
@@ -98,13 +102,13 @@ fun MusicPlayerBottomBar(
             )
 
             Box(modifier = Modifier.height(26.dp)) {
-//                MyMusicCircularProgressBar(
-//                    progress = currentPosition,
-//                    progressMax = duration,
-//                    modifier = Modifier
-//                        .fillMaxHeight()
-//                        .aspectRatio(1f)
-//                )
+                MusicCircularProgressBar(
+                    progress = currentPosition,
+                    progressMax = duration,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .aspectRatio(1f)
+                )
 
                 Image(
                     painter =
@@ -145,5 +149,7 @@ fun MusicPlayerBottomBar(
                     }
             )
         }
+
     }
 }
+

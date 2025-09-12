@@ -17,4 +17,6 @@ class MainViewModel @Inject constructor(
     songRepository = songRepository,
     userDataRepository = userDataRepository,
 ){
+    fun onMusicListClick() {
+    }
 }
