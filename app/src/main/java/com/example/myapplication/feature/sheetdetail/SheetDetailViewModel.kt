@@ -33,7 +33,7 @@ class SheetDetailViewModel @Inject constructor(
     val data: StateFlow<SheetDetailUiState> = _data
     private val sheetID: String = checkNotNull(savedStateHandle[SHEET_ID])
 
-    private lateinit var datum: Sheet
+    private lateinit var sheet: Sheet
 
     init {
         loadData()
@@ -46,8 +46,8 @@ class SheetDetailViewModel @Inject constructor(
                     .asResult()
                     .collectLatest { r ->
                         if (r.isSuccess) {
-                             datum = r.getOrThrow().data !!
-                            _data.value = SheetDetailUiState.Success( datum )
+                             sheet = r.getOrThrow().data !!
+                            _data.value = SheetDetailUiState.Success( sheet )
                         }else{
                             _data.value = SheetDetailUiState.Error( r.exceptionOrNull()!!.localException())
                         }
@@ -64,7 +64,7 @@ class SheetDetailViewModel @Inject constructor(
 
     fun onSongClick(index: Int) {
         setMediaAndPlay(
-            songs =  datum.songs!!,
+            datum =  sheet.songs!!,
             index =  index,
             navigateToMusicPlayer = true
         )

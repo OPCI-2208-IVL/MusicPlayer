@@ -44,12 +44,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MediaItem
 import com.example.myapplication.R
 import com.example.myapplication.component.NavigationBar
 import com.example.myapplication.database.model.SongEntity
 import com.example.myapplication.extension.clickableNoRipple
 import com.example.myapplication.feature.discovery.DiscoveryRoute
+import com.example.myapplication.feature.mediaplayer.component.MusicListDialog
 import com.example.myapplication.feature.mediaplayer.component.MusicPlayerBottomBar
 import com.example.myapplication.feature.my.MyRoute
 import com.example.myapplication.feature.settings.SettingsRoute
@@ -73,11 +75,12 @@ fun MainRoute(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    val musicDatum by viewModel.playListDatum.collectAsState()
-    val nowPlaying by viewModel.nowPlaying.collectAsState()
-    val playbackState by viewModel.playbackState.collectAsState()
-    val currentPosition by viewModel.currentPosition.collectAsState()
-    val recordRotation by viewModel.recordRotation.collectAsState()
+    val musicDatum by viewModel.playListDatum.collectAsStateWithLifecycle()
+    val nowPlaying by viewModel.nowPlaying.collectAsStateWithLifecycle()
+    val playbackState by viewModel.playbackState.collectAsStateWithLifecycle()
+    val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
+    val recordRotation by viewModel.recordRotation.collectAsStateWithLifecycle()
+    val showMusicListDialog by viewModel.showMusicListDialog.collectAsStateWithLifecycle()
 
     val isLogin by appUiState.isLogin.collectAsState()
     val userData by appUiState.userData.collectAsState()
@@ -118,7 +121,20 @@ fun MainRoute(
             currentPosition = currentPosition.toFloat(),
             recordRotation = recordRotation,
             onPlayOrPauseClick = viewModel::onPlayOrPauseClick,
-            onMusicListClick = viewModel::onMusicListClick ,
+            toggleShowMusicListDialog = viewModel::toggleShowMusicListDialog ,
+        )
+    }
+
+    if(showMusicListDialog){
+        MusicListDialog(
+            datum = musicDatum,
+            nowPlaying = nowPlaying,
+            onClearPlayListClick = viewModel::onClearPlayListClick,
+            onItemPlayListClick = viewModel::onItemPlayListClick,
+            onItemMusicDeleteClick = viewModel::onItemMusicDeleteClick,
+            onDismissRequest = {
+                viewModel.toggleShowMusicListDialog()
+            }
         )
     }
 }
@@ -134,7 +150,7 @@ fun MainScreen(
     currentPosition: Float = 0F,
     recordRotation: Float = 0F,
     onPlayOrPauseClick: () -> Unit,
-    onMusicListClick: () -> Unit,
+    toggleShowMusicListDialog: () -> Unit,
 ) {
     val pageState = rememberPagerState {
         3
@@ -167,7 +183,7 @@ fun MainScreen(
             }
         }
 
-        if (datum.isNotEmpty()){
+        if (nowPlaying.mediaId.isNotBlank()){
             MusicPlayerBottomBar(
                 modifier = Modifier.clickable { toMusicPlayer() },
                 title = nowPlaying.mediaMetadata.title.toString(),
@@ -178,7 +194,7 @@ fun MainScreen(
                 duration = playbackState.duration.toFloat(),
                 recordRotation = recordRotation,
                 onPlayOrPauseClick = onPlayOrPauseClick,
-                onMusicListClick = onMusicListClick
+                toggleShowMusicListDialog = toggleShowMusicListDialog
             )
         }
 

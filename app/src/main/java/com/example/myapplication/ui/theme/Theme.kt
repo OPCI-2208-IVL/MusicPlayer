@@ -278,3 +278,5 @@ fun AppTheme(
 }
 
 val LocalDividerColor = staticCompositionLocalOf { outlineLight }
+
+val LocalArrowColor = staticCompositionLocalOf { inverseOnSurfaceLight }

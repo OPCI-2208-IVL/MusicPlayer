@@ -17,21 +17,20 @@ import com.example.myapplication.model.from
 import com.example.myapplication.util.ResourceUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 open class BaseMediaPlayerViewModel(
-    private val mediaServiceConnection: MediaServiceConnection,
-    private val songRepository: SongRepository,
-    private val userDataRepository: UserDataRepository
+    protected val mediaServiceConnection: MediaServiceConnection,
+    protected val songRepository: SongRepository,
+    protected val userDataRepository: UserDataRepository
 ): ViewModel() {
 
-    var toMusicPlayer = mutableStateOf<Boolean>(false)
+    val showMusicListDialog = MutableStateFlow(false)
 
-    val recordRotation = MutableStateFlow(0f)
+    var toMusicPlayer = mutableStateOf<Boolean>(false)
 
     val nowPlaying = mediaServiceConnection.nowPlaying
 
@@ -55,31 +54,25 @@ open class BaseMediaPlayerViewModel(
         initialValue = emptyList()
     )
 
-    init {
-        collectCurrentPosition()
-    }
-
-    private fun collectCurrentPosition() {
-        viewModelScope.launch {
-            mediaServiceConnection.currentPosition.collectLatest { position ->
-                if(recordRotation.value > 360f)
-                    recordRotation.value = 0f
-                recordRotation.value += ROTATION_PER
-            }
-        }
-    }
-
     fun setMediaAndPlay(
-        songs: List<Song>,
+        datum: List<Song>,
         index: Int,
         navigateToMusicPlayer: Boolean = false
      ){
         viewModelScope.launch {
 
             songRepository.clearAllPlayList()
-            songRepository.insertList(songs.map {
+            songRepository.insertList(datum.map {
                 it.toSongEntity()
             })
+
+            val songs = datum.mapIndexed{
+                index, song ->
+                song.copy(
+                    totalTrackCount = datum.size,
+                    trackNumber = index
+                )
+            }
 
             val mediaItems = songs.map {
                 MediaItem.Builder()
@@ -142,7 +135,12 @@ open class BaseMediaPlayerViewModel(
         }
     }
 
-    companion object {
-        private const val ROTATION_PER = 0.2304f
+    fun hideMusicListDialog(){
+        showMusicListDialog.value = false
     }
+
+    fun toggleShowMusicListDialog(){
+        showMusicListDialog.value = !showMusicListDialog.value
+    }
+
 }

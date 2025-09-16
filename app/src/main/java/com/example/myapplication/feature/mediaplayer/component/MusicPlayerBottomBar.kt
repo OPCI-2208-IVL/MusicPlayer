@@ -44,7 +44,7 @@ fun MusicPlayerBottomBar(
     duration: Float,
     recordRotation: Float,
     onPlayOrPauseClick: () -> Unit,
-    onMusicListClick: () -> Unit
+    toggleShowMusicListDialog: () -> Unit
 ){
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -145,7 +145,7 @@ fun MusicPlayerBottomBar(
                 modifier = Modifier
                     .size(25.dp)
                     .clickableNoRipple {
-                        onMusicListClick()
+                        toggleShowMusicListDialog()
                     }
             )
         }

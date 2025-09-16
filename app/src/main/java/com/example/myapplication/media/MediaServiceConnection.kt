@@ -265,6 +265,21 @@ class MediaServiceConnection(
          }
     }
 
+    fun playIndex(index: Int) {
+        mediaController?.run {
+            seekTo(index, 0L)
+            play()
+        }
+    }
+
+    fun delete(index: Int) {
+        mediaController?.removeMediaItem(index)
+    }
+
+    fun clearAll() {
+        mediaController?.clearMediaItems()
+    }
+
     companion object{
         @Volatile
         private var instance: MediaServiceConnection? = null
