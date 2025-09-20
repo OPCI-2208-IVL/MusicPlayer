@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.repository.SongRepository
 import com.example.myapplication.data.repository.UserDataRepository
 import com.example.myapplication.media.MediaServiceConnection
+import com.example.myapplication.model.lyric.LyricManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -14,12 +15,15 @@ import javax.inject.Inject
 open class MusicPlayerViewModel @Inject constructor(
     mediaServiceConnection: MediaServiceConnection,
     songRepository: SongRepository,
-    userDataRepository: UserDataRepository
+    userDataRepository: UserDataRepository,
+    protected val lyricManager: LyricManager
 ): BaseMediaPlayerViewModel(
     mediaServiceConnection = mediaServiceConnection,
     songRepository = songRepository,
     userDataRepository = userDataRepository
 ) {
+    val lyric = lyricManager.lyric
+
     val showRecord = MutableStateFlow(true)
 
     val recordRotation = MutableStateFlow(0f)

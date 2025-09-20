@@ -109,6 +109,10 @@ open class BaseMediaPlayerViewModel(
         mediaServiceConnection.seekTo(fl.toLong())
     }
 
+    fun onSeek(fl: Long) {
+        mediaServiceConnection.seekTo(fl)
+    }
+
     fun onPreviousClick() {
         mediaServiceConnection.seekToPrevious()
     }

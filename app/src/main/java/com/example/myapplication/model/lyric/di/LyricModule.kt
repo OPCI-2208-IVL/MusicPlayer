@@ -1,35 +1,33 @@
-package com.example.myapplication.media.di
+package com.example.myapplication.model.lyric.di
 
-import android.content.ComponentName
 import android.content.Context
 import com.example.myapplication.data.repository.SongRepository
 import com.example.myapplication.data.repository.UserDataRepository
-import com.example.myapplication.media.MediaService
 import com.example.myapplication.media.MediaServiceConnection
-
+import com.example.myapplication.model.lyric.LyricManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MediaModule {
+class LyricModule{
     @Provides
-    fun provideMusicServiceConnection(
+    @Singleton
+    fun providesLyricManager(
         @ApplicationContext context: Context,
-        songRepository: SongRepository,
+        mediaServiceConnection: MediaServiceConnection,
         userDataRepository: UserDataRepository,
-    ): MediaServiceConnection{
-        return MediaServiceConnection.getInstance(
-            context,
-            ComponentName(
-                context,
-                MediaService::class.java
-            ),
-            songRepository,
-            userDataRepository,
+        songRepository: SongRepository
+    ): LyricManager {
+        return LyricManager(
+            context = context,
+            mediaServiceConnection = mediaServiceConnection,
+            userDataRepository = userDataRepository,
+            songRepository = songRepository
         )
     }
 }

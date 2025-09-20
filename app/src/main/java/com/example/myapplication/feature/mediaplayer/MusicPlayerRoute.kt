@@ -65,7 +65,7 @@ import com.example.myapplication.feature.lyric.LyricList
 import com.example.myapplication.feature.mediaplayer.component.MusicListDialog
 import com.example.myapplication.feature.mediaplayer.component.MyRecordImage
 import com.example.myapplication.media.PlaybackState
-import com.example.myapplication.model.Lyric
+import com.example.myapplication.model.lyric.Lyric
 import com.example.myapplication.model.PlayRepeatMode
 import com.example.myapplication.ui.theme.SpaceLarge
 import com.example.myapplication.ui.theme.SpaceOuter
@@ -85,6 +85,7 @@ fun MusicPlayerRoute(
     val recordRotation by viewModel.recordRotation.collectAsStateWithLifecycle()
     val showMusicListDialog by viewModel.showMusicListDialog.collectAsStateWithLifecycle()
     val showRecord by viewModel.showRecord.collectAsStateWithLifecycle()
+    val lyric by viewModel.lyric.collectAsStateWithLifecycle()
 
     MusicPlayerScreen(
         finishPage = finishPage,
@@ -105,8 +106,8 @@ fun MusicPlayerRoute(
         toggleRecordAndLyric = viewModel::toggleRecordAndLyric,
         clearPosition = viewModel::clearPosition,
         showRecord = showRecord,
-        onLyricPlayClick = {},
-        lyric = Lyric.EMPTY
+        onLyricPlayClick = viewModel::onSeek,
+        lyric = lyric
     )
 
     if(showMusicListDialog){
