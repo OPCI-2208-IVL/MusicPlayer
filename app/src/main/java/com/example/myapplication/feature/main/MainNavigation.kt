@@ -21,12 +21,14 @@ fun NavGraphBuilder.mainScreen(
     toSheetDetail: (String) -> Unit,
     toMusicPlayer: () -> Unit,
     appUiState: MyAppUiState,
+    toLogin: () -> Unit,
 ) {
     composable(MAIN_ROUTE) {
         MainRoute(
             toSheetDetail = toSheetDetail,
             appUiState =  appUiState,
             toMusicPlayer = toMusicPlayer,
+            toLogin = toLogin,
         )
     }
 }

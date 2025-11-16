@@ -70,7 +70,8 @@ fun MainRoute(
     toSheetDetail: (String) -> Unit,
     appUiState: MyAppUiState,
     toMusicPlayer: () -> Unit,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
+    toLogin: () -> Unit
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -105,7 +106,7 @@ fun MainRoute(
                     isLogin= isLogin,
                     toProfile = {},
                     toScan = {},
-                    toLogin = {},
+                    toLogin = toLogin,
                     onLogoutClick = {}
                 )
             }

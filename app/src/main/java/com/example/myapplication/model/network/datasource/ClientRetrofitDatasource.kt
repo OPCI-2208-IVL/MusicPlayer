@@ -1,8 +1,10 @@
 package com.example.myapplication.model.network.datasource
 
 import com.example.myapplication.config.Config.ENDPOINT
+import com.example.myapplication.model.Session
 import com.example.myapplication.model.Sheet
 import com.example.myapplication.model.Song
+import com.example.myapplication.model.User
 import com.example.myapplication.model.ViewData
 import com.example.myapplication.model.network.retrofit.ClientNetworkAPIService
 import com.example.myapplication.model.response.NetworkPageData
@@ -47,5 +49,11 @@ class ClientRetrofitDatasource @Inject constructor(
         @Query(value = "id")id: String
     ):NetworkResponse<Sheet> {
         return service.sheetDetail(id)
+    }
+
+    override suspend fun login(
+        data: User
+    ): NetworkResponse<Session> {
+        return service.login(data)
     }
 }

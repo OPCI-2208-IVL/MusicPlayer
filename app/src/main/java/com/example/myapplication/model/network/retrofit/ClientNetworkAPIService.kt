@@ -1,11 +1,15 @@
 package com.example.myapplication.model.network.retrofit
 
+import com.example.myapplication.model.Session
 import com.example.myapplication.model.Sheet
 import com.example.myapplication.model.Song
+import com.example.myapplication.model.User
 import com.example.myapplication.model.ViewData
 import com.example.myapplication.model.response.NetworkPageData
 import com.example.myapplication.model.response.NetworkResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ClientNetworkAPIService {
@@ -26,4 +30,9 @@ interface ClientNetworkAPIService {
     suspend fun sheetDetail(
         @Query(value = "id")id: String
     ):NetworkResponse<Sheet>
+
+    @POST("v1/login")
+    suspend fun login(
+        @Body data: User
+    ): NetworkResponse<Session>
 }
