@@ -1,5 +1,6 @@
 package com.example.myapplication.feature.login
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -55,6 +59,9 @@ fun LoginRoute(
     finishAllLoginPage: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.loginUIState.collectAsState()
+    val context = LocalContext.current
+
     LoginScreen(
         finishPage = finishPage,
         toRegister = toRegister,
@@ -62,6 +69,38 @@ fun LoginRoute(
         finishAllLoginPage = finishAllLoginPage,
         onLoginClick = viewModel::onLoginClick
     )
+
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is LoginUIState.Success -> {
+                finishAllLoginPage()
+            }
+
+            is LoginUIState.ErrorRes -> {
+                Toast
+                    .makeText(
+                        context,
+                        state.message,
+                        Toast.LENGTH_SHORT
+                    )
+                    .show()
+            }
+
+            is LoginUIState.Error -> {
+                Toast
+                    .makeText(
+                        context,
+                        state.exception.tipString,
+                        Toast.LENGTH_SHORT
+                    )
+                    .show()
+            }
+
+            else -> {}
+        }
+
+        viewModel.resetUIState()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

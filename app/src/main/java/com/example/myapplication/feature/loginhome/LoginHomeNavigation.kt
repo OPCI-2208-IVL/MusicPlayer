@@ -8,6 +8,10 @@ const val LOGIN_HOME_ROUTE = "login_home"
 
 fun NavController.navigateToLoginHome() = navigate(LOGIN_HOME_ROUTE)
 
+fun NavController.finishAllLoginPage() {
+    popBackStack(LOGIN_HOME_ROUTE, true)
+}
+
 fun NavGraphBuilder.loginHomeScreen(
     finishPage: () -> Unit,
     toLogin: () -> Unit,

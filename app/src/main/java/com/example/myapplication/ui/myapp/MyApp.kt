@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import com.example.myapplication.data.repository.UserDataRepository
 import com.example.myapplication.feature.login.loginScreen
 import com.example.myapplication.feature.login.navigateToLogin
+import com.example.myapplication.feature.loginhome.finishAllLoginPage
 import com.example.myapplication.feature.loginhome.loginHomeScreen
 import com.example.myapplication.feature.loginhome.navigateToLoginHome
 import com.example.myapplication.feature.main.mainScreen
@@ -44,13 +45,13 @@ fun Myapp(
             finishPage = navController::popBackStack,
             toLogin = navController::navigateToLogin,
             toCodeLogin = {},
-            finishAllLoginPage = { }
+            finishAllLoginPage = navController::finishAllLoginPage
         )
         loginScreen(
             finishPage = navController::popBackStack,
             toRegister = {},
             toSetPassword = {},
-            finishAllLoginPage = { }
+            finishAllLoginPage = navController::finishAllLoginPage
         )
     }
 }

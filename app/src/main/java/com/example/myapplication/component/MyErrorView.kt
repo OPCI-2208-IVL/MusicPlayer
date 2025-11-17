@@ -33,7 +33,7 @@ fun MyErrorView (
     MyErrorView(
         modifier = modifier,
         message = exception.tipString!!,
-        icon = exception.tipIcon!!,
+        icon = exception.tipIcon,
         retryButtonText = retryButtonText,
         onRetryClick =  onRetryClick
     )
@@ -44,7 +44,7 @@ fun MyErrorView (
     modifier: Modifier = Modifier,
     message: String = "加载失败",
     retryButtonText: String = "重新加载",
-    icon: Int = R.drawable.bg_error,
+    icon: Int? ,
     onRetryClick: () -> Unit = {}
 ) {
     Column (
@@ -59,7 +59,7 @@ fun MyErrorView (
     ){
         Image(
             modifier = Modifier.size(200.dp),
-            painter = painterResource(id = icon),
+            painter = painterResource(id = icon?: R.drawable.bg_error),
             contentDescription = null
         )
 

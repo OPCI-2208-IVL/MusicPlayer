@@ -35,6 +35,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.myapplication.component.MyErrorView
+import com.example.myapplication.component.MyLoading
 import com.example.myapplication.component.song.ItemSong
 import com.example.myapplication.feature.sheet.ItemSheet
 import com.example.myapplication.model.ViewData
@@ -56,17 +58,18 @@ fun DiscoveryRoute(
         toSearch = toSearch,
         toSheetDetail = toSheetDetail,
         toggleDrawer = toggleDrawer,
-        topDatum = datum
+        onRetry = viewModel::onRetryClick,
+        datum = datum
     )
 }
-
 
 @Composable
 fun DiscoveryScreen(
     toSearch: () -> Unit,
     toSheetDetail: (String) -> Unit,
     toggleDrawer: () -> Unit,
-    topDatum:List<ViewData>
+    onRetry: () -> Unit,
+    datum: DiscoverUiState
 ) {
     Scaffold (
         topBar = {
@@ -79,37 +82,66 @@ fun DiscoveryScreen(
             .contentWindowInsets
             .exclude(WindowInsets.navigationBars)
     ){paddingValues->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ){
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = SpaceOuter),
-                verticalArrangement = Arrangement.spacedBy(SpaceSmall),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                topDatum.forEach { data ->
-                    if (data.sheets!=null) {
-                        items(data.sheets) {
-                            ItemSheet(
-                                data = it,
-                                modifier = Modifier.clickable {
-                                    toSheetDetail(it.id)
-                                }
-                            )
-                        }
+        when (datum) {
+            is DiscoverUiState.Loading -> {
+                MyLoading()
+            }
+
+            is DiscoverUiState.Success -> {
+                DiscoveryList(
+                    toSheetDetail = toSheetDetail,
+                    topDatum = datum.data,
+                    modifier = Modifier.padding(paddingValues)
+                )
+            }
+
+            is DiscoverUiState.Error -> {
+                MyErrorView(
+                    exception = datum.exception,
+                    onRetryClick = onRetry
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun DiscoveryList(
+    toSheetDetail: (String) -> Unit,
+    topDatum:List<ViewData>,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+    ){
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = SpaceOuter),
+            verticalArrangement = Arrangement.spacedBy(SpaceSmall),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            topDatum.forEach { data ->
+                if (data.sheets!=null) {
+                    items(data.sheets) {
+                        ItemSheet(
+                            data = it,
+                            modifier = Modifier.clickable {
+                                toSheetDetail(it.id)
+                            }
+                        )
                     }
-                    else if (data.songs!=null) {
-                        items(data.songs) {
-                            ItemSong(data = it)
-                        }
+                }
+                else if (data.songs!=null) {
+                    items(data.songs) {
+                        ItemSong(data = it)
                     }
                 }
             }
         }
     }
 }
+
 
 
 

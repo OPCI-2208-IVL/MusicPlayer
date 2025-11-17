@@ -70,4 +70,8 @@ class LoginViewModel @Inject constructor(
                     }
         }
     }
+
+    fun resetUIState() {
+        loginUIState.value = LoginUIState.None
+    }
 }
