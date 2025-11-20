@@ -3,6 +3,8 @@ package com.example.myapplication
 import android.app.Application
 import android.util.Log
 import com.example.myapplication.data.repository.UserDataRepository
+import com.example.myapplication.datastore.SessionPreferences
+import com.example.myapplication.media.MediaServiceConnection
 import com.example.myapplication.ui.myapp.MyAppState
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +19,8 @@ import javax.inject.Inject
 class MyApplication: Application() {
     @Inject
     lateinit var userDataRepository: UserDataRepository
+
+    private var isInitAfterLogin: Boolean = false
 
     private val applicationScope =  CoroutineScope(SupervisorJob())
 
@@ -34,6 +38,28 @@ class MyApplication: Application() {
                     MyAppState.userId = it.userId
                 }
         }
+        isInitAfterLogin = true
+    }
+
+    fun logout() {
+        isInitAfterLogin = false
+        applicationScope.launch {
+            userDataRepository.logout()
+            }
+    }
+
+    fun initAfterLogin(session: SessionPreferences) {
+        destroyInstance()
+        if (isInitAfterLogin) {
+            return
+        }
+
+        isInitAfterLogin = true
+    }
+
+    private fun destroyInstance() {
+        MyAppState.localDatabase= null
+        MediaServiceConnection.destroyInstance()
     }
 
     companion object{

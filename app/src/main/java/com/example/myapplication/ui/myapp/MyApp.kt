@@ -35,20 +35,28 @@ fun Myapp(
             toLogin = navController::navigateToLoginHome
         )
         sheetDetail(
-            finishPage = navController::popBackStack,
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
             toMusicPlayer = navController::navigateToMusicPlayer
         )
         musicPlayerScreen(
-            finishPage = navController::popBackStack
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
         )
         loginHomeScreen(
-            finishPage = navController::popBackStack,
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
             toLogin = navController::navigateToLogin,
             toCodeLogin = {},
             finishAllLoginPage = navController::finishAllLoginPage
         )
         loginScreen(
-            finishPage = navController::popBackStack,
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
             toRegister = {},
             toSetPassword = {},
             finishAllLoginPage = navController::finishAllLoginPage
