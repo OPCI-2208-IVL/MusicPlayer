@@ -24,7 +24,7 @@ data class UserData(
 
     val globalLyricStyle: GlobalLyricStylePreferences = GlobalLyricStylePreferences.newBuilder().build(),
 ) {
-    fun isLogin():Boolean {
-        return false
+    fun isLogin(): Boolean {
+        return session.userId.isNotBlank()
     }
 }

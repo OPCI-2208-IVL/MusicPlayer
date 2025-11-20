@@ -3,6 +3,8 @@ package com.example.myapplication.model.network.di
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.myapplication.MyApplication
 import com.example.myapplication.config.Config
+import com.example.myapplication.ui.myapp.MyAppState
+import com.example.myapplication.util.Constant
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,6 +49,16 @@ class NetworkModule {
             })
 
             .addInterceptor(ChuckerInterceptor.Builder(MyApplication.instance).build())
+
+            .addInterceptor{
+                var request = it.request()
+                if (MyAppState.session.isNotEmpty()) {
+                    request = request.newBuilder()
+                        .header(Constant.HEADER_AUTH, MyAppState.session)
+                        .build()
+                }
+                it.proceed(request)
+            }
 
             .build()
     }

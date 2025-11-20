@@ -2,7 +2,6 @@ package com.example.myapplication.feature.loginhome
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,15 +23,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import com.example.myapplication.component.BackgroundContent
 import com.example.myapplication.ui.theme.Space3XLarge
 import com.example.myapplication.ui.theme.SpaceLarge
 
@@ -70,42 +71,57 @@ fun LoginHomeScreen(
                         Icon(
                             imageVector = androidx.compose.material.icons.Icons.Default.ArrowBackIosNew,
                             contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.surface
                         )
                     }
                 },
                 title = {},
                 modifier = Modifier.fillMaxWidth(),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                )
             )
         }
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(paddingValues)
+
         ){
-            Image(
-                painter = painterResource(R.drawable.placeholder),
-                contentDescription = "Login Home",
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 60.dp)
-                    .size(100.dp)
-                    .clip(MaterialTheme.shapes.extraSmall)
+            BackgroundContent(
+                data = R.drawable.login_home_background,
+                modifier = Modifier.fillMaxSize()
             )
 
-            BottomView(
-                toLogin = toLogin,
-                toCodeLogin = toCodeLogin,
-                toWebPage = toWebPage,
+            Column(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(
-                        start = SpaceLarge,
-                        end = SpaceLarge,
-                        bottom = Space3XLarge
-                    )
-            )
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.splash_logo),
+                    contentDescription = "Login Home",
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 60.dp)
+                        .size(160.dp)
+                        .clip(MaterialTheme.shapes.extraSmall)
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                BottomView(
+                    toLogin = toLogin,
+                    toCodeLogin = toCodeLogin,
+                    toWebPage = toWebPage,
+                    modifier = Modifier
+                        .padding(
+                            start = SpaceLarge,
+                            end = SpaceLarge,
+                            bottom = Space3XLarge
+                        )
+                )
+            }
         }
     }
 }
@@ -129,7 +145,7 @@ fun BottomView(
                 .height(48.dp)
                 .fillMaxWidth()
         ) {
-           Text(text = "Account Login")
+           Text(text = "登录/注册")
         }
 
         Spacer(modifier = Modifier.size(SpaceLarge))
@@ -140,7 +156,7 @@ fun BottomView(
                 .height(48.dp)
                 .fillMaxWidth()
         ) {
-           Text(text = "Code Login")
+           Text(text = "二维码登录")
         }
 
         Spacer(modifier = Modifier.size(SpaceLarge))
@@ -148,20 +164,26 @@ fun BottomView(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(70.dp)
+                .padding(40.dp)
                 .fillMaxWidth()
         ) {
             RoundLoginButton(
                 icon = R.drawable.passport_sns_qq
             )
 
+            Spacer(modifier = Modifier.size(SpaceLarge))
+
             RoundLoginButton(
                 icon = R.drawable.passport_sns_wechat
             )
 
+            Spacer(modifier = Modifier.size(SpaceLarge))
+
             RoundLoginButton(
                 icon = R.drawable.passport_sns_weibo
             )
+
+            Spacer(modifier = Modifier.size(SpaceLarge))
 
             RoundLoginButton(
                 icon = R.drawable.passport_sns_google

@@ -13,6 +13,8 @@ import com.example.myapplication.feature.main.mainScreen
 import com.example.myapplication.feature.main.navigateToMain
 import com.example.myapplication.feature.mediaplayer.musicPlayerScreen
 import com.example.myapplication.feature.mediaplayer.navigateToMusicPlayer
+import com.example.myapplication.feature.register.navigateToRegister
+import com.example.myapplication.feature.register.registerScreen
 import com.example.myapplication.feature.sheetdetail.navigateToSheetDetail
 import com.example.myapplication.feature.sheetdetail.sheetDetail
 import com.example.myapplication.feature.splash.SPlASH_ROUTE
@@ -32,26 +34,41 @@ fun Myapp(
             appUiState = appUiState,
             toSheetDetail = navController::navigateToSheetDetail,
             toMusicPlayer = navController::navigateToMusicPlayer,
-            toLogin = navController::navigateToLoginHome
+            toLogin = navController::navigateToLoginHome,
+            toMy = {},
         )
         sheetDetail(
-            finishPage = navController::popBackStack,
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
             toMusicPlayer = navController::navigateToMusicPlayer
         )
         musicPlayerScreen(
-            finishPage = navController::popBackStack
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
         )
         loginHomeScreen(
-            finishPage = navController::popBackStack,
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
             toLogin = navController::navigateToLogin,
             toCodeLogin = {},
             finishAllLoginPage = navController::finishAllLoginPage
         )
         loginScreen(
-            finishPage = navController::popBackStack,
-            toRegister = {},
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
+            toRegister = navController::navigateToRegister,
             toSetPassword = {},
             finishAllLoginPage = navController::finishAllLoginPage
+        )
+        registerScreen(
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
+            finishAllPage = navController::finishAllLoginPage
         )
     }
 }

@@ -75,6 +75,20 @@ class UserPreferencesDatasource @Inject constructor(
         }
     }
 
+    suspend fun login(sessionData: SessionPreferences, userData: UserPreferences) {
+        try {
+            userPreferences.updateData {
+                //Log.d("NiaPreferences", "login: $it")
+                it.copy {
+                    this.session = sessionData
+                    this.user = userData
+                }
+            }
+        } catch (ioException: IOException) {
+            Log.e("NiaPreferences", "Failed to update user preferences on login", ioException)
+        }
+    }
+
     suspend fun logout() {
         try {
             userPreferences.updateData {

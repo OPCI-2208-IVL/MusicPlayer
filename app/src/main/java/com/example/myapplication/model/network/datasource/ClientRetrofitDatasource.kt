@@ -1,6 +1,7 @@
 package com.example.myapplication.model.network.datasource
 
 import com.example.myapplication.config.Config.ENDPOINT
+import com.example.myapplication.model.BaseID
 import com.example.myapplication.model.Session
 import com.example.myapplication.model.Sheet
 import com.example.myapplication.model.Song
@@ -55,5 +56,11 @@ class ClientRetrofitDatasource @Inject constructor(
         data: User
     ): NetworkResponse<Session> {
         return service.login(data)
+    }
+
+    override suspend fun register(
+        data: User
+    ): NetworkResponse<BaseID> {
+        return service.register(data)
     }
 }

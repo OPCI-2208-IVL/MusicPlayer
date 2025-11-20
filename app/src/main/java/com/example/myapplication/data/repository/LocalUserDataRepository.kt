@@ -28,6 +28,16 @@ class LocalUserDataRepository @Inject constructor(
         userPreferencesDatasource.setUser(data!!)
     }
 
+    override suspend fun login(
+        sessionPreferences: SessionPreferences?,
+        userPreferences: UserPreferences?
+    ) {
+        userPreferencesDatasource.login(
+            sessionPreferences!!,
+            userPreferences!!
+        )
+    }
+
     override suspend fun logout() {
         userPreferencesDatasource.logout()
     }

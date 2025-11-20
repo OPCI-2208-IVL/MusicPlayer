@@ -3,6 +3,8 @@ package com.example.myapplication
 import android.app.Application
 import android.util.Log
 import com.example.myapplication.data.repository.UserDataRepository
+import com.example.myapplication.datastore.SessionPreferences
+import com.example.myapplication.media.MediaServiceConnection
 import com.example.myapplication.ui.myapp.MyAppState
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +20,8 @@ class MyApplication: Application() {
     @Inject
     lateinit var userDataRepository: UserDataRepository
 
+    private var isInitAfterLogin: Boolean = false
+
     private val applicationScope =  CoroutineScope(SupervisorJob())
 
     override fun onCreate() {
@@ -30,10 +34,36 @@ class MyApplication: Application() {
                 .map { it.session }
                 .distinctUntilChanged()
                 .collectLatest {
+                    Log.d("MyApp", "UserData Flow collected new data: session=${it.session}")
                     MyAppState.session = it.session
                     MyAppState.userId = it.userId
                 }
         }
+        isInitAfterLogin = true
+    }
+
+    fun logout() {
+        isInitAfterLogin = false
+        applicationScope.launch {
+            userDataRepository.logout()
+            }
+    }
+
+    fun initAfterLogin(session: SessionPreferences) {
+        destroyInstance()
+        if (isInitAfterLogin) {
+            return
+        }
+
+        MyAppState.session = session.session
+        MyAppState.userId = session.userId
+
+        isInitAfterLogin = true
+    }
+
+    private fun destroyInstance() {
+        MyAppState.localDatabase= null
+        MediaServiceConnection.destroyInstance()
     }
 
     companion object{

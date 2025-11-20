@@ -1,5 +1,6 @@
 package com.example.myapplication.model
 
+import com.example.myapplication.datastore.UserPreferences
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -148,4 +149,15 @@ data class User(
      */
     val style: Int = 0,
 //endregion
-)
+) {
+    fun toPreferences(): UserPreferences {
+        return UserPreferences.newBuilder()
+            .setId(id)
+            .setNickname(nickname)
+            .setIcon(icon ?: "")
+            .setDetail(detail ?: "")
+            .setGender(gender)
+            .build()
+
+    }
+}

@@ -295,5 +295,9 @@ class MediaServiceConnection(
                     instance = it
                 }
             }
+
+        fun destroyInstance() {
+            instance?.release()
+        }
     }
 }

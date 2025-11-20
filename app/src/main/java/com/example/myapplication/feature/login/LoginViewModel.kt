@@ -3,7 +3,9 @@ package com.example.myapplication.feature.login
 import android.text.TextUtils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.MyApplication
 import com.example.myapplication.data.repository.SessionRepository
+import com.example.myapplication.data.repository.UserDataRepository
 import com.example.myapplication.exception.localException
 import com.example.myapplication.model.User
 import com.example.myapplication.result.asResult
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val sessionRepository: SessionRepository
+    private val sessionRepository: SessionRepository,
+    private val userDataRepository: UserDataRepository,
 ) : ViewModel(){
     val loginUIState = MutableStateFlow<LoginUIState>(LoginUIState.None)
     fun onLoginClick(username: String, password: String) {
@@ -48,13 +51,18 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login(user: User) {
+        if (loginUIState.value == LoginUIState.Loading) return
         viewModelScope.launch {
+            loginUIState.value = LoginUIState.Loading
                 sessionRepository.login(user)
                     .asResult()
                     .collectLatest {
                         if (it.isSuccess) {
-                            val session = it.getOrNull()
-                            if (session != null) {
+                            val result = it.getOrNull()
+                            if (result != null) {
+                                val sessionPreferences = result.data!!.toPreferences()
+                                userDataRepository.login(sessionPreferences,result.data.user.toPreferences())
+                                MyApplication.instance.initAfterLogin(sessionPreferences!!)
                                 loginUIState.value = LoginUIState.Success
                             } else {
                                 loginUIState.value = LoginUIState.ErrorRes("登录失败，返回数据为空")

@@ -30,7 +30,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +46,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.myapplication.component.MyCenterTopAppBar
 import com.example.myapplication.ui.theme.SpaceExtraSmall2
 import com.example.myapplication.ui.theme.SpaceLarge
@@ -59,14 +59,14 @@ fun LoginRoute(
     finishAllLoginPage: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.loginUIState.collectAsState()
+    val uiState by viewModel.loginUIState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LoginScreen(
+        uiState = uiState,
         finishPage = finishPage,
         toRegister = toRegister,
         toSetPassword = toSetPassword,
-        finishAllLoginPage = finishAllLoginPage,
         onLoginClick = viewModel::onLoginClick
     )
 
@@ -84,6 +84,7 @@ fun LoginRoute(
                         Toast.LENGTH_SHORT
                     )
                     .show()
+                viewModel.resetUIState()
             }
 
             is LoginUIState.Error -> {
@@ -94,12 +95,11 @@ fun LoginRoute(
                         Toast.LENGTH_SHORT
                     )
                     .show()
+                viewModel.resetUIState()
             }
 
             else -> {}
         }
-
-        viewModel.resetUIState()
     }
 }
 
@@ -109,8 +109,8 @@ fun LoginScreen(
     finishPage: () -> Unit,
     toRegister: () -> Unit,
     toSetPassword: () -> Unit,
-    finishAllLoginPage: () -> Unit,
-    onLoginClick: (String, String) -> Unit = { _, _ -> }
+    onLoginClick: (String, String) -> Unit = { _, _ -> },
+    uiState: LoginUIState
 ) {
 
     var username by remember { mutableStateOf("") }
@@ -157,6 +157,7 @@ fun LoginScreen(
                     keyboardController?.hide()
                     onLoginClick(username, password)
                 },
+                enabled = uiState != LoginUIState.Loading,
                 modifier = Modifier
                     .height(64.dp)
                     .fillMaxWidth()
@@ -316,6 +317,6 @@ fun LoginScreenPreview() {
         finishPage = {},
         toRegister = {},
         toSetPassword = {},
-        finishAllLoginPage = {}
+        uiState = LoginUIState.None,
     )
 }

@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MediaItem
+import coil.compose.AsyncImage
 import com.example.myapplication.R
 import com.example.myapplication.component.NavigationBar
 import com.example.myapplication.database.model.SongEntity
@@ -62,6 +63,7 @@ import com.example.myapplication.ui.theme.SpaceExtraOuter
 import com.example.myapplication.ui.theme.SpaceExtraSmall
 import com.example.myapplication.ui.theme.SpaceMedium
 import com.example.myapplication.ui.theme.SpaceOuter
+import com.example.myapplication.util.ResourceUtil
 import kotlinx.coroutines.launch
 
 
@@ -71,7 +73,8 @@ fun MainRoute(
     appUiState: MyAppUiState,
     toMusicPlayer: () -> Unit,
     viewModel: MainViewModel = hiltViewModel(),
-    toLogin: () -> Unit
+    toLogin: () -> Unit,
+    toMy: () -> Unit
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -106,8 +109,12 @@ fun MainRoute(
                     isLogin= isLogin,
                     toProfile = {},
                     toScan = {},
-                    toLogin = toLogin,
-                    onLogoutClick = {}
+                    toLogin = {
+                        toggleDrawer()
+                        toLogin()
+                    },
+                    onLogoutClick = {},
+                    toMy = toMy,
                 )
             }
         }
@@ -220,7 +227,8 @@ fun MainDrawerView(
     toProfile: () -> Unit,
     toScan: () -> Unit,
     toLogin: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    toMy: () -> Unit
 ){
     val scrollState = rememberScrollState()
     Column (
@@ -236,7 +244,7 @@ fun MainDrawerView(
             toProfile = toProfile,
             toScan = toScan,
             toLogin = toLogin,
-            onLogoutClick = onLogoutClick
+            toMy = toMy
         )
 
         Spacer(Modifier.size(SpaceMedium))
@@ -258,7 +266,7 @@ fun MainDrawerView(
 
         Spacer(Modifier.size(SpaceMedium))
 
-        if (!userData.isLogin()){
+        if (isLogin){
             OutlinedButton(
                 onClick = onLogoutClick,
                 modifier = Modifier
@@ -278,12 +286,21 @@ fun UserInfoView(
     toProfile: () -> Unit,
     toScan: () -> Unit,
     toLogin: () -> Unit,
-    onLogoutClick: () -> Unit
+    toMy: () -> Unit
 ) {
-    DefaultUserProfile(
-        toLogin = toLogin,
-        toScan = toScan
+    if(!isLogin){
+        DefaultUserProfile(
+            toLogin = toLogin,
+            toScan = toScan,
         )
+    } else {
+        UserProfile(
+            toScan = toScan,
+            userData = userData,
+            toMy = toMy,
+        )
+    }
+
 }
 
 @Composable
@@ -301,13 +318,15 @@ private fun DefaultUserProfile(
             painter = painterResource(id = R.drawable.placeholder),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.size(30.dp).clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)),
+            modifier = Modifier
+                .size(30.dp)
+                .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp))
         )
 
         Spacer(Modifier.size(SpaceMedium))
 
         Text(
-            text = "登录或注册",
+            text =  "登录或注册" ,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface,
         )
@@ -315,6 +334,66 @@ private fun DefaultUserProfile(
         Icon(
         imageVector = Icons.Default.ChevronRight,
         contentDescription = null,
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        IconButton(onClick = toScan) {
+            Icon(
+                painter = painterResource(id = R.drawable.scan),
+                contentDescription = null,
+                modifier = Modifier.size(36.dp),
+            )
+        }
+    }
+}
+
+@Composable
+fun UserProfile(
+    toScan: () -> Unit,
+    userData: UserData,
+    toMy: () -> Unit,
+){
+    val user = userData.user
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickableNoRipple { toMy() },
+    ) {
+        if (user.icon.isNotBlank()) {
+            AsyncImage(
+                model = ResourceUtil.abs2rel(user.icon),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(30.dp)
+                    .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)),
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.placeholder),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(30.dp)
+                    .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)),
+            )
+        }
+
+
+        Spacer(Modifier.size(SpaceMedium))
+
+        Text(
+            text = user.nickname,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Icon(
+            imageVector = Icons.Default.ChevronRight,
+            contentDescription = null,
         )
 
         Spacer(modifier = Modifier.weight(1f))

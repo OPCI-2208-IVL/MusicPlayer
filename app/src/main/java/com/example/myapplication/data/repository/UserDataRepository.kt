@@ -14,6 +14,10 @@ interface UserDataRepository {
 
     suspend fun setSession(data: SessionPreferences?)
     suspend fun setUser(data: UserPreferences?)
+    suspend fun login(
+        sessionPreferences: SessionPreferences?,
+        userPreferences: UserPreferences?
+    )
     suspend fun logout()
 
     suspend fun setDynamicColorPreference(useDynamicColor: Boolean)

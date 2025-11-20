@@ -1,5 +1,6 @@
 package com.example.myapplication.result
 
+import com.example.myapplication.MyApplication
 import com.example.myapplication.exception.CommonException
 import com.example.myapplication.model.response.NetworkResponse
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +13,9 @@ fun<T> Flow<T>.asResult(): Flow<Result<T>> = map {
         if (it.isSucceeded){
             Result.success(it)
         } else {
+            if (it.status == 401){
+                MyApplication.instance.logout()
+            }
             Result.failure(CommonException(it))
         }
     } else {

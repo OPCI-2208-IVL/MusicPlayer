@@ -1,5 +1,6 @@
 package com.example.myapplication.model.network.retrofit
 
+import com.example.myapplication.model.BaseID
 import com.example.myapplication.model.Session
 import com.example.myapplication.model.Sheet
 import com.example.myapplication.model.Song
@@ -35,4 +36,9 @@ interface ClientNetworkAPIService {
     suspend fun login(
         @Body data: User
     ): NetworkResponse<Session>
+
+    @POST("v1/users/add")
+    suspend fun register(
+        @Body data: User
+    ): NetworkResponse<BaseID>
 }
