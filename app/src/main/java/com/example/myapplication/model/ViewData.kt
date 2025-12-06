@@ -14,8 +14,8 @@ data class ViewData(
      */
     val style: Int = 10,
 
-//    val ads: List<Ad>? = null,
-//    val buttons: List<ButtonViewData>? = null,
+    val ads: List<Ad>? = null,
+    val buttons: List<ButtonViewData>? = null,
 //    val larges: List<CropData>? = null,
 //    val hots: List<Product>? = null,
     val sheets: List<Sheet>? = null,

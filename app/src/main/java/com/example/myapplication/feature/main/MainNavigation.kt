@@ -23,6 +23,7 @@ fun NavGraphBuilder.mainScreen(
     appUiState: MyAppUiState,
     toLogin: () -> Unit,
     toMy: () -> Unit,
+    toUrl: (String) -> Unit,
 ) {
     composable(MAIN_ROUTE) {
         MainRoute(
@@ -31,6 +32,7 @@ fun NavGraphBuilder.mainScreen(
             toMusicPlayer = toMusicPlayer,
             toLogin = toLogin,
             toMy = toMy,
+            toUrl = toUrl
         )
     }
 }

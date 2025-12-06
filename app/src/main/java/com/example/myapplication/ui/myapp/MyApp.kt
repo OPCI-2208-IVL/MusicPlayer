@@ -19,6 +19,7 @@ import com.example.myapplication.feature.sheetdetail.navigateToSheetDetail
 import com.example.myapplication.feature.sheetdetail.sheetDetail
 import com.example.myapplication.feature.splash.SPlASH_ROUTE
 import com.example.myapplication.feature.splash.splashScreen
+import com.example.myapplication.util.SuperUrlUtil
 
 @Composable
 fun Myapp(
@@ -27,6 +28,21 @@ fun Myapp(
     appUiState: MyAppUiState = rememberMyAppUiState(userDataRepository = userDataRepository)
 ) {
     NavHost(navController = navController, startDestination = SPlASH_ROUTE) {
+
+        fun processUrlClick(url: String) {
+            navController.navigateToMain()
+            if(url.startsWith("quickapp://sheets/detail")){
+                val query = SuperUrlUtil.getQueryMap(url)
+                query["id"]?.let {
+                    navController.navigateToSheetDetail(it.toString())
+                }
+            } else if (url.startsWith("http://") || url.startsWith("https://")) {
+                // Handle normal URL
+            } else {
+                // Handle other custom schemes
+            }
+        }
+
         splashScreen(
             toMain = navController::navigateToMain
         )
@@ -36,6 +52,7 @@ fun Myapp(
             toMusicPlayer = navController::navigateToMusicPlayer,
             toLogin = navController::navigateToLoginHome,
             toMy = {},
+            toUrl = ::processUrlClick
         )
         sheetDetail(
             finishPage = {
