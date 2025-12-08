@@ -52,6 +52,13 @@ android {
     }
 }
 
+configurations.configureEach {
+    resolutionStrategy {
+        force("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.2",
+            "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)

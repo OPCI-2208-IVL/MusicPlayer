@@ -36,6 +36,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,6 +46,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -71,7 +74,6 @@ import com.example.myapplication.util.ResourceUtil
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun DiscoveryRoute(
     toSearch: () -> Unit,
@@ -85,8 +87,9 @@ fun DiscoveryRoute(
         toSearch = toSearch,
         toSheetDetail = toSheetDetail,
         toggleDrawer = toggleDrawer,
-        onRetry = viewModel::onRetryClick,
         toUrl = toUrl,
+        onRefresh = viewModel::onRefresh,
+        onRetry = viewModel::onRetry,
         datum = datum
     )
 }
@@ -96,9 +99,10 @@ fun DiscoveryScreen(
     toSearch: () -> Unit,
     toSheetDetail: (String) -> Unit,
     toggleDrawer: () -> Unit,
-    onRetry: () -> Unit,
     toUrl: (String) -> Unit,
-    datum: DiscoverUiState
+    onRefresh: () -> Unit,
+    onRetry: () -> Unit,
+    datum: DiscoverUiState,
 ) {
     Scaffold (
         topBar = {
@@ -121,6 +125,7 @@ fun DiscoveryScreen(
                     toSheetDetail = toSheetDetail,
                     toUrl = toUrl,
                     topDatum = datum.data,
+                    onRefresh = onRefresh,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -136,17 +141,33 @@ fun DiscoveryScreen(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscoveryList(
     toSheetDetail: (String) -> Unit,
     toUrl: (String) -> Unit ,
     topDatum:List<ViewData>,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
+    val pullToRefreshState = rememberPullToRefreshState()
+    if (pullToRefreshState.isRefreshing) {
+        LaunchedEffect(pullToRefreshState.isRefreshing) {
+            onRefresh()
+        }
+    }
+    if (topDatum.isNotEmpty()) {
+        LaunchedEffect(Unit) {
+            pullToRefreshState.endRefresh()
+        }
+    }
+
+   Box (
         modifier = modifier
             .fillMaxSize()
-    ){
+            .nestedScroll(pullToRefreshState.nestedScrollConnection)
+
+   ){
         val gridState = rememberLazyGridState()
         LazyVerticalGrid(
             columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(3),
@@ -223,7 +244,12 @@ fun DiscoveryList(
                 }
             }
         }
-    }
+
+        PullToRefreshContainer(
+            modifier = Modifier.align(Alignment.TopCenter),
+            state = pullToRefreshState,
+        )
+   }
 }
 
 @Composable

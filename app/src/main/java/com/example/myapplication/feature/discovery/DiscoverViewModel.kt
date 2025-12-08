@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.repository.CommonRepository
 import com.example.myapplication.exception.localException
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +16,7 @@ class DiscoverViewModel @Inject constructor(
 ):ViewModel() {
     private val _data = MutableStateFlow<DiscoverUiState>(DiscoverUiState.Loading)
     val datum: StateFlow<DiscoverUiState> = _data
+
 
     init {
         loadData()
@@ -37,7 +37,12 @@ class DiscoverViewModel @Inject constructor(
         }
     }
 
-    fun onRetryClick() {
+    fun onRefresh() {
+        loadData()
+    }
+
+    fun onRetry() {
+        _data.value = DiscoverUiState.Loading
         loadData()
     }
 

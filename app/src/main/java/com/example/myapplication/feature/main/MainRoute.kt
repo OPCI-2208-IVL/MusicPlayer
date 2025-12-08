@@ -66,7 +66,6 @@ import com.example.myapplication.ui.theme.SpaceOuter
 import com.example.myapplication.util.ResourceUtil
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun MainRoute(
     toSheetDetail: (String) -> Unit,
