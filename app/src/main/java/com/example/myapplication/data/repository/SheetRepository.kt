@@ -19,4 +19,10 @@ class SheetRepository @Inject constructor(
              networkDatasource.sheetDetail(id)
         )
     }.flowOn(Dispatchers.IO)
+
+    fun cancelCollectSheet(sheetID: String) = flow {
+        emit(
+            networkDatasource.cancelCollectSheet(sheetID)
+        )
+    }.flowOn(Dispatchers.IO)
 }

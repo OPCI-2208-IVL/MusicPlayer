@@ -1,6 +1,7 @@
 package com.example.myapplication.model.network.datasource
 
 import com.example.myapplication.model.BaseID
+import com.example.myapplication.model.BaseModel
 import com.example.myapplication.model.Session
 import com.example.myapplication.model.Sheet
 import com.example.myapplication.model.Song
@@ -24,6 +25,10 @@ interface ClientNetworkDatasource {
         id: String
     ): NetworkResponse<Sheet>
 
+    suspend fun cancelCollectSheet(
+        sheetID: String
+    ): NetworkResponse<BaseModel>
+
     suspend fun login(
         data: User
     ): NetworkResponse<Session>
@@ -31,4 +36,6 @@ interface ClientNetworkDatasource {
     suspend fun register(
         data: User
     ): NetworkResponse<BaseID>
+
+
 }

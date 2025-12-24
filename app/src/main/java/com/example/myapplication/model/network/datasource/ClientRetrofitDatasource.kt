@@ -2,6 +2,7 @@ package com.example.myapplication.model.network.datasource
 
 import com.example.myapplication.config.Config.ENDPOINT
 import com.example.myapplication.model.BaseID
+import com.example.myapplication.model.BaseModel
 import com.example.myapplication.model.Session
 import com.example.myapplication.model.Sheet
 import com.example.myapplication.model.Song
@@ -50,6 +51,12 @@ class ClientRetrofitDatasource @Inject constructor(
         @Query(value = "id")id: String
     ):NetworkResponse<Sheet> {
         return service.sheetDetail(id)
+    }
+
+    override suspend fun cancelCollectSheet(
+        sheetID: String
+    ): NetworkResponse<BaseModel> {
+        return service.cancelCollectSheet(BaseID(sheetID))
     }
 
     override suspend fun login(

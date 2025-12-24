@@ -1,6 +1,7 @@
 package com.example.myapplication.model.network.retrofit
 
 import com.example.myapplication.model.BaseID
+import com.example.myapplication.model.BaseModel
 import com.example.myapplication.model.Session
 import com.example.myapplication.model.Sheet
 import com.example.myapplication.model.Song
@@ -41,4 +42,9 @@ interface ClientNetworkAPIService {
     suspend fun register(
         @Body data: User
     ): NetworkResponse<BaseID>
+
+    @POST("v1/collects/delete")
+    suspend fun cancelCollectSheet(
+        @Body data: BaseID
+    ): NetworkResponse<BaseModel>
 }

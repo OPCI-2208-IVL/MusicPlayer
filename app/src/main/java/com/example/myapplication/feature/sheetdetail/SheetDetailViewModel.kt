@@ -29,6 +29,9 @@ class SheetDetailViewModel @Inject constructor(
     songRepository,
     userDataRepository
 ) {
+    val recordRotation = MutableStateFlow(0f)
+    private val pauseRecordRotation = MutableStateFlow(false)
+
     private val _data = MutableStateFlow<SheetDetailUiState>(SheetDetailUiState.Loading)
     val data: StateFlow<SheetDetailUiState> = _data
     private val sheetID: String = checkNotNull(savedStateHandle[SHEET_ID])
@@ -68,5 +71,77 @@ class SheetDetailViewModel @Inject constructor(
             index =  index,
             navigateToMusicPlayer = true
         )
+    }
+
+    fun onCollectClick() {
+        if( sheet.isCollected ){
+            viewModelScope.launch {
+                sheetRepository.cancelCollectSheet( sheetID )
+                    .asResult()
+                    .collectLatest { r ->
+                        if (r.isSuccess) {
+                            setCollectState()
+                        } else {
+                            tipError.value = r.exceptionOrNull()!!.localException().tipString
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun setCollectState(
+        collectID: String = ""
+    ) {
+        sheet = sheet.copy(
+            collectId = collectID,
+            collectsCount = if( collectID.isNotBlank() ) sheet.collectsCount + 1 else sheet.collectsCount - 1
+        )
+        _data.value = SheetDetailUiState.Success( sheet )
+    }
+
+    init {
+        collectCurrentPosition()
+    }
+
+    private fun collectCurrentPosition() {
+        viewModelScope.launch {
+            mediaServiceConnection.currentPosition.collectLatest {
+                if (!pauseRecordRotation.value) {
+                    if (recordRotation.value > 360f)
+                        recordRotation.value = 0f
+                    recordRotation.value += ROTATION_PER
+                }
+
+            }
+        }
+    }
+
+    companion object {
+        private const val ROTATION_PER = 0.2304f
+    }
+
+    fun onClearPlayListClick() {
+        hideMusicListDialog()
+        mediaServiceConnection.clearAll()
+        viewModelScope.launch {
+            songRepository.deleteAll()
+        }
+    }
+
+    fun onItemPlayListClick(index: Int) {
+        playIndex(index)
+    }
+
+    private fun playIndex(index: Int) {
+        mediaServiceConnection.playIndex(index)
+    }
+
+    fun onItemMusicDeleteClick(index: Int) {
+        mediaServiceConnection.delete(index)
+        viewModelScope.launch {
+            songRepository.delete(playListDatum.value[index])
+            if (playListDatum.value.isEmpty())
+                hideMusicListDialog()
+        }
     }
 }

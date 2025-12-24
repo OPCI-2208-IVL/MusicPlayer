@@ -28,6 +28,8 @@ open class BaseMediaPlayerViewModel(
     protected val userDataRepository: UserDataRepository
 ): ViewModel() {
 
+    val tipError = MutableStateFlow<String?>(null)
+
     val showMusicListDialog = MutableStateFlow(false)
 
     var toMusicPlayer = mutableStateOf<Boolean>(false)
