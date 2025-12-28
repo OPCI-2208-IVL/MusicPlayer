@@ -12,6 +12,7 @@ import com.example.myapplication.model.response.NetworkResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ClientNetworkAPIService {
@@ -21,7 +22,27 @@ interface ClientNetworkAPIService {
     @GET("v1/songs/info")
     suspend fun songDetail(
         @Query(value = "id")id: String,
-    ) :NetworkResponse<Song>
+    ): NetworkResponse<Song>
+
+    @GET("v1/users/{userId}/create")
+    suspend fun createSheets(
+        @Path("userId") userId: String
+    ): NetworkResponse<NetworkPageData<Sheet>>
+
+    @GET("v1/users/{userId}/collect")
+    suspend fun collectSheets(
+        @Path("userId") userId: String
+    ): NetworkResponse<NetworkPageData<Sheet>>
+
+    @POST("v1/sheets/add")
+    suspend fun createSheet(
+        @Body data: Sheet
+    ): NetworkResponse<Sheet>
+
+    @POST("v1/sheets/update")
+    suspend fun updateSheet(
+        @Body data: Sheet
+    ): NetworkResponse<Sheet>
 
     @GET("v1/indexes")
     suspend fun  index(
@@ -42,6 +63,11 @@ interface ClientNetworkAPIService {
     suspend fun register(
         @Body data: User
     ): NetworkResponse<BaseID>
+
+    @POST("v1/collects/add")
+    suspend fun collectSheet(
+        @Body data: BaseID
+    ): NetworkResponse<BaseModel>
 
     @POST("v1/collects/delete")
     suspend fun cancelCollectSheet(

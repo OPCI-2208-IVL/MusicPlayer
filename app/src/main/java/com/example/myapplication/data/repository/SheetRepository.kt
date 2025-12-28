@@ -12,6 +12,23 @@ import javax.inject.Inject
 class SheetRepository @Inject constructor(
     private val networkDatasource: ClientNetworkDatasource
 ) {
+
+    fun createSheet(
+        data:Sheet
+    ): Flow<NetworkResponse<Sheet>> = flow<NetworkResponse<Sheet>> {
+        emit(
+            networkDatasource.createSheet(data)
+        )
+    }.flowOn(Dispatchers.IO)
+
+    suspend fun createSheets(
+        userId: String
+    ) = networkDatasource.createSheets(userId)
+
+    suspend fun collectSheets(
+        userId: String
+    ) = networkDatasource.collectSheets(userId)
+
     fun sheetDetail(
         id: String
     ): Flow<NetworkResponse<Sheet>> = flow {
@@ -23,6 +40,12 @@ class SheetRepository @Inject constructor(
     fun cancelCollectSheet(sheetID: String) = flow {
         emit(
             networkDatasource.cancelCollectSheet(sheetID)
+        )
+    }.flowOn(Dispatchers.IO)
+
+    fun collectSheet(sheetID: String) = flow {
+        emit(
+            networkDatasource.collectSheet(sheetID)
         )
     }.flowOn(Dispatchers.IO)
 }

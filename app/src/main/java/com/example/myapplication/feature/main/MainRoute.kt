@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -75,6 +76,9 @@ fun MainRoute(
     toLogin: () -> Unit,
     toMy: () -> Unit,
     toUrl: (String) -> Unit,
+    toLocalMusic: () -> Unit,
+    toScanLocalMusic: () -> Unit,
+    toEditSheet: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -125,12 +129,17 @@ fun MainRoute(
             datum = musicDatum,
             toMusicPlayer = toMusicPlayer,
             nowPlaying = nowPlaying,
+            toLogin = toLogin,
             playbackState = playbackState,
+            appUiState = appUiState,
             currentPosition = currentPosition.toFloat(),
             recordRotation = recordRotation,
             onPlayOrPauseClick = viewModel::onPlayOrPauseClick,
             toggleShowMusicListDialog = viewModel::toggleShowMusicListDialog ,
-            toUrl = toUrl
+            toUrl = toUrl,
+            toEditSheet = toEditSheet,
+            toLocalMusic = toLocalMusic,
+            toScanLocalMusic = toScanLocalMusic,
         )
     }
 
@@ -154,8 +163,13 @@ fun MainScreen(
     toggleDrawer: () -> Unit,
     datum: List<SongEntity> = listOf(),
     toMusicPlayer: () -> Unit,
+    toLogin: () -> Unit,
+    toLocalMusic: () -> Unit,
+    toScanLocalMusic: () -> Unit,
+    toEditSheet: () -> Unit,
     nowPlaying: MediaItem = MediaItem.EMPTY,
     playbackState: PlaybackState,
+    appUiState: MyAppUiState,
     currentPosition: Float = 0F,
     recordRotation: Float = 0F,
     onPlayOrPauseClick: () -> Unit,
@@ -189,7 +203,14 @@ fun MainScreen(
                     toggleDrawer = toggleDrawer,
                     toUrl = toUrl
                 )
-                1 -> MyRoute()
+                1 -> MyRoute(
+                    appUiState = appUiState,
+                    toLogin = toLogin,
+                    toSheetDetail = toSheetDetail,
+                    toEditSheet = toEditSheet,
+                    toLocalMusic = toLocalMusic,
+                    toScanLocalMusic = toScanLocalMusic
+                )
                 2 -> SettingsRoute()
             }
         }
@@ -468,6 +489,7 @@ fun MySettingItem(
     modifier: Modifier = Modifier,
     title: String = "",
     value: String = "",
+    icon: ImageVector = Icons.Default.QrCode,
     onClick: () -> Unit = {},
 ) {
     Row(
@@ -485,7 +507,7 @@ fun MySettingItem(
             ),
     ) {
         Icon(
-            imageVector = Icons.Default.QrCode,
+            imageVector = icon,
             contentDescription = null,
         )
 

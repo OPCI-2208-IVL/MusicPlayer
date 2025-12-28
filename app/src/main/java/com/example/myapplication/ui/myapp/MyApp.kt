@@ -13,6 +13,7 @@ import com.example.myapplication.feature.main.mainScreen
 import com.example.myapplication.feature.main.navigateToMain
 import com.example.myapplication.feature.mediaplayer.musicPlayerScreen
 import com.example.myapplication.feature.mediaplayer.navigateToMusicPlayer
+import com.example.myapplication.feature.my.navigateToMy
 import com.example.myapplication.feature.register.navigateToRegister
 import com.example.myapplication.feature.register.registerScreen
 import com.example.myapplication.feature.sheetdetail.navigateToSheetDetail
@@ -51,8 +52,11 @@ fun Myapp(
             toSheetDetail = navController::navigateToSheetDetail,
             toMusicPlayer = navController::navigateToMusicPlayer,
             toLogin = navController::navigateToLoginHome,
-            toMy = {},
-            toUrl = ::processUrlClick
+            toMy = navController::navigateToMy,
+            toUrl = ::processUrlClick,
+            toEditSheet = {},
+            toLocalMusic = {},
+            toScanLocalMusic = {}
         )
         sheetDetail(
             finishPage = {

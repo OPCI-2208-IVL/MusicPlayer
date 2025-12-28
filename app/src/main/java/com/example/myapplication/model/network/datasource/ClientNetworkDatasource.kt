@@ -25,10 +25,6 @@ interface ClientNetworkDatasource {
         id: String
     ): NetworkResponse<Sheet>
 
-    suspend fun cancelCollectSheet(
-        sheetID: String
-    ): NetworkResponse<BaseModel>
-
     suspend fun login(
         data: User
     ): NetworkResponse<Session>
@@ -37,5 +33,28 @@ interface ClientNetworkDatasource {
         data: User
     ): NetworkResponse<BaseID>
 
+    suspend fun createSheet(
+        data: Sheet
+    ): NetworkResponse<Sheet>
+
+    suspend fun createSheets(
+        userId: String
+    ): NetworkResponse<NetworkPageData<Sheet>>
+
+    suspend fun collectSheets(
+        userId: String
+    ): NetworkResponse<NetworkPageData<Sheet>>
+
+    suspend fun updateSheet(
+        data: Sheet
+    ): NetworkResponse<Sheet>
+
+    suspend fun collectSheet(
+        sheetID: String
+    ): NetworkResponse<BaseModel>
+
+    suspend fun cancelCollectSheet(
+        sheetID: String
+    ): NetworkResponse<BaseModel>
 
 }

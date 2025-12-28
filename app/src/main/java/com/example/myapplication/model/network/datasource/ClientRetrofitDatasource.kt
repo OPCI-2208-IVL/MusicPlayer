@@ -53,6 +53,12 @@ class ClientRetrofitDatasource @Inject constructor(
         return service.sheetDetail(id)
     }
 
+    override suspend fun collectSheet(
+        sheetID: String
+    ): NetworkResponse<BaseModel> {
+        return service.collectSheet(BaseID(sheetID))
+    }
+
     override suspend fun cancelCollectSheet(
         sheetID: String
     ): NetworkResponse<BaseModel> {
@@ -69,5 +75,29 @@ class ClientRetrofitDatasource @Inject constructor(
         data: User
     ): NetworkResponse<BaseID> {
         return service.register(data)
+    }
+
+    override suspend fun createSheet(
+        data: Sheet
+    ): NetworkResponse<Sheet> {
+        return service.createSheet(data)
+    }
+
+    override suspend fun createSheets(
+        userId: String
+    ): NetworkResponse<NetworkPageData<Sheet>> {
+        return service.createSheets(userId)
+    }
+
+    override suspend fun collectSheets(
+        userId: String
+    ): NetworkResponse<NetworkPageData<Sheet>> {
+        return service.collectSheets(userId)
+    }
+
+    override suspend fun updateSheet(
+        data: Sheet
+    ): NetworkResponse<Sheet> {
+        return updateSheet(data)
     }
 }

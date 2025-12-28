@@ -74,15 +74,25 @@ class SheetDetailViewModel @Inject constructor(
     }
 
     fun onCollectClick() {
-        if( sheet.isCollected ){
-            viewModelScope.launch {
+        viewModelScope.launch {
+            if( sheet.isCollected ){
                 sheetRepository.cancelCollectSheet( sheetID )
                     .asResult()
-                    .collectLatest { r ->
-                        if (r.isSuccess) {
+                    .collectLatest {
+                        if (it.isSuccess) {
                             setCollectState()
                         } else {
-                            tipError.value = r.exceptionOrNull()!!.localException().tipString
+                            tipError.value = it.exceptionOrNull()!!.localException().tipString
+                        }
+                    }
+            } else {
+                sheetRepository.collectSheet(sheet.id)
+                    .asResult()
+                    .collectLatest {
+                        if (it.isSuccess) {
+                            setCollectState("1")
+                        } else {
+                            tipError.value = it.exceptionOrNull()!!.localException().tipString
                         }
                     }
             }
