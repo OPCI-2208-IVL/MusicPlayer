@@ -79,6 +79,7 @@ fun MainRoute(
     toLocalMusic: () -> Unit,
     toScanLocalMusic: () -> Unit,
     toEditSheet: () -> Unit,
+    toSearch: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -140,6 +141,7 @@ fun MainRoute(
             toEditSheet = toEditSheet,
             toLocalMusic = toLocalMusic,
             toScanLocalMusic = toScanLocalMusic,
+            toSearch = toSearch
         )
     }
 
@@ -166,6 +168,7 @@ fun MainScreen(
     toLogin: () -> Unit,
     toLocalMusic: () -> Unit,
     toScanLocalMusic: () -> Unit,
+    toSearch: () -> Unit,
     toEditSheet: () -> Unit,
     nowPlaying: MediaItem = MediaItem.EMPTY,
     playbackState: PlaybackState,
@@ -198,7 +201,7 @@ fun MainScreen(
         ) { page ->
             when (page) {
                 0 -> DiscoveryRoute(
-                    toSearch = {},
+                    toSearch = toSearch,
                     toSheetDetail = toSheetDetail,
                     toggleDrawer = toggleDrawer,
                     toUrl = toUrl

@@ -18,6 +18,8 @@ import com.example.myapplication.feature.mediaplayer.navigateToMusicPlayer
 import com.example.myapplication.feature.my.navigateToMy
 import com.example.myapplication.feature.register.navigateToRegister
 import com.example.myapplication.feature.register.registerScreen
+import com.example.myapplication.feature.search.navigateToSearch
+import com.example.myapplication.feature.search.searchScreen
 import com.example.myapplication.feature.sheetdetail.navigateToSheetDetail
 import com.example.myapplication.feature.sheetdetail.sheetDetail
 import com.example.myapplication.feature.splash.SPlASH_ROUTE
@@ -58,7 +60,8 @@ fun Myapp(
             toUrl = ::processUrlClick,
             toEditSheet = navController::navigateToCreateSheet,
             toLocalMusic = {},
-            toScanLocalMusic = {}
+            toScanLocalMusic = {},
+            toSearch = navController::navigateToSearch
         )
         sheetDetail(
             finishPage = {
@@ -97,6 +100,13 @@ fun Myapp(
             finishPage = {
                 if (navController.previousBackStackEntry != null)
                     navController.popBackStack() }
+        )
+        searchScreen(
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() },
+            toSheetDetail = navController::navigateToSheetDetail,
+            toUserDetail = {}
         )
     }
 }

@@ -27,6 +27,7 @@ fun NavGraphBuilder.mainScreen(
     toLocalMusic: () -> Unit,
     toScanLocalMusic: () -> Unit,
     toEditSheet: () -> Unit,
+    toSearch: () -> Unit
 ) {
     composable(MAIN_ROUTE) {
         MainRoute(
@@ -38,7 +39,8 @@ fun NavGraphBuilder.mainScreen(
             toUrl = toUrl,
             toEditSheet = toEditSheet,
             toLocalMusic = toLocalMusic,
-            toScanLocalMusic = toScanLocalMusic
+            toScanLocalMusic = toScanLocalMusic,
+            toSearch = toSearch
         )
     }
 }
