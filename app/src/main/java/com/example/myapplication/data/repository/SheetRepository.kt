@@ -48,4 +48,10 @@ class SheetRepository @Inject constructor(
             networkDatasource.collectSheet(sheetID)
         )
     }.flowOn(Dispatchers.IO)
+
+    fun updateSheet(data: Sheet) = flow {
+        emit(
+            networkDatasource.updateSheet(data)
+        )
+    }.flowOn(Dispatchers.IO)
 }

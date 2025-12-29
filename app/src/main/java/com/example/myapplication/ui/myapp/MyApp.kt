@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.example.myapplication.data.repository.UserDataRepository
+import com.example.myapplication.feature.createsheet.createSheetScreen
+import com.example.myapplication.feature.createsheet.navigateToCreateSheet
 import com.example.myapplication.feature.login.loginScreen
 import com.example.myapplication.feature.login.navigateToLogin
 import com.example.myapplication.feature.loginhome.finishAllLoginPage
@@ -54,7 +56,7 @@ fun Myapp(
             toLogin = navController::navigateToLoginHome,
             toMy = navController::navigateToMy,
             toUrl = ::processUrlClick,
-            toEditSheet = {},
+            toEditSheet = navController::navigateToCreateSheet,
             toLocalMusic = {},
             toScanLocalMusic = {}
         )
@@ -90,6 +92,11 @@ fun Myapp(
                 if (navController.previousBackStackEntry != null)
                     navController.popBackStack() },
             finishAllPage = navController::finishAllLoginPage
+        )
+        createSheetScreen(
+            finishPage = {
+                if (navController.previousBackStackEntry != null)
+                    navController.popBackStack() }
         )
     }
 }
